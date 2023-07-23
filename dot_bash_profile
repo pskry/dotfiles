@@ -1,0 +1,8 @@
+#
+# ~/.bash_profile
+#
+
+[ -f ~/.profile ] && source ~/.profile
+[ -f ~/.bashrc ]  && source ~/.bashrc
+
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker

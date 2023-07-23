@@ -1,0 +1,22 @@
+#
+# ~/.bashrc
+#
+
+[[ $- != *i* ]] && return
+
+shopt -s histappend
+shopt -s expand_aliases
+shopt -s checkwinsize
+
+# Source global definitions
+[ -f /etc/bashrc ] && . /etc/bashrc
+[ -f ~/.aliases ] && . ~/.aliases
+
+# Start SSH Keychain
+eval "$(keychain --quiet --eval --agents ssh psr_ed25519 pskry_ed25519)"
+
+# Start Starship prompt
+eval "$(starship init bash)"
+fastfetch
+
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker

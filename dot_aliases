@@ -1,0 +1,31 @@
+#
+# ~/.aliases
+#
+
+alias mkdir='mkdir -p'
+
+alias ls='exa --group-directories-first --icons --color=auto'
+alias l='ls -l'
+alias ll='ls -la'
+
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias xzegrep='xzegrep --color=auto'
+alias xzfgrep='xzfgrep --color=auto'
+alias xzgrep='xzgrep --color=auto'
+alias zegrep='zegrep --color=auto'
+alias zfgrep='zfgrep --color=auto'
+alias zgrep='zgrep --color=auto'
+
+alias vim='nvim'
+alias vimdiff='nvim -d'
+
+alias cat='bat --theme=gruvbox-dark'
+
+alias cz='chezmoi'
+
+alias df='df -h'
+alias free='free -h'
+
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker

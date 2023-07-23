@@ -1,0 +1,39 @@
+#
+# ~/.profile
+#
+
+export EDITOR="/usr/bin/nvim"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export SKRYNET_VAULT_PASS_FILE="$HOME/.secret/skrynet_vault_pass"
+
+# PATH setup {{{
+
+prepend_path() { [[ "$PATH" =~ "$1" ]] || PATH="$1:$PATH"; }
+append_path() { [[ "$PATH" =~ "$1" ]] || PATH="$PATH:$1"; }
+
+prepend_path "$HOME/.platformio/penv/bin"
+prepend_path "$HOME/.local/bin"
+prepend_path "$HOME/bin"
+append_path "$HOME/.local/share/JetBrains/Toolbox/scripts"
+append_path "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+export PATH
+
+unset -f prepend_path
+unset -f append_path
+
+# PATH setup }}}
+
+# ENV setup {{{
+
+# SDKMAN env
+export SDKMAN_DIR="$HOME/.sdkman"
+[ -f "$HOME/.sdkman/bin/sdkman-init.sh" ] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# rust/cargo env
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# ENV setup }}}
+
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
