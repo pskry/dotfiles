@@ -202,15 +202,7 @@
     alias -s gz='gzip -l'
     alias -s {log,out}='tail -F'
 
-    alias mkdir='mkdir -p'
-
-    alias ls='exa --group-directories-first --git --icons --color=auto'
-    alias l='ls -l'
-    alias ll='ls -la'
-
-    alias cat='bat'
-
-    alias df='df -h'
+    [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 
 # Use `< file` to quickly view the contents of any text file.
 READNULLCMD=$PAGER  # Set the program to use for this.
@@ -223,12 +215,10 @@ READNULLCMD=$PAGER  # Set the program to use for this.
     # Start Starship
     eval "$(starship init zsh)"
 
-    export SDKMAN_DIR=$(brew --prefix sdkman-cli)/libexec
-    if [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]]; then
-        source "${SDKMAN_DIR}/bin/sdkman-init.sh"
-    fi
-
-    . "$HOME/.cargo/env"
+    #export SDKMAN_DIR=$(brew --prefix sdkman-cli)/libexec
+    #if [[ -s "${SDKMAN_DIR}/bin/sdkman-init.sh" ]]; then
+    #    source "${SDKMAN_DIR}/bin/sdkman-init.sh"
+    #fi
 
 } "$@"
 
