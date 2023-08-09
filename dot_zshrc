@@ -218,7 +218,3 @@ READNULLCMD=$PAGER  # Set the program to use for this.
 } "$@"
 
 # vim:sw=4:sw=4:fdm=marker:fenc=utf-8:ft=zsh
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
