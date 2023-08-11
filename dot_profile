@@ -2,17 +2,20 @@
 # ~/.profile
 #
 
+# load all this only once
+[ -z $__PROFILE_LOADED ] || return
+
 export EDITOR="nvim"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export SKRYNET_VAULT_PASS_FILE="$HOME/.secret/skrynet_vault_pass"
-export HOMEBREW_PREFIX="/opt/homebrew";
-export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
-export HOMEBREW_REPOSITORY="/opt/homebrew";
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
-export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
-export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 
 # PATH setup {{{
 
@@ -41,5 +44,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # ENV setup }}}
+
+export __PROFILE_LOADED=true
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
