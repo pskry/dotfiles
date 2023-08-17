@@ -218,7 +218,7 @@
 # commands, functions and aliases ========================================== }}}
 
     # Start Keychain
-    eval "$(keychain --quiet --eval --agents ssh psr_ed25519 pskry_ed25519)"
+    eval "$(keychain --ignore-missing --quiet --eval --agents ssh psr_ed25519 pskry_ed25519)"
 
     # Start Starship
     eval "$(starship init zsh)"
