@@ -71,6 +71,7 @@
         $ZDOTDIR/functions
         $fpath
         ~/.local/share/zsh/site-functions
+        ~/.local/share/zsh/completions
     )
 
     if command -v brew > /dev/null; then
@@ -204,8 +205,15 @@
 
     [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 
-# Use `< file` to quickly view the contents of any text file.
-READNULLCMD=$PAGER  # Set the program to use for this.
+    # Use `< file` to quickly view the contents of any text file.
+    READNULLCMD=$PAGER  # Set the program to use for this.
+
+    # shell completion
+    if type brew &>/dev/null; then
+        FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+    fi
+    autoload -Uz compinit
+    compinit
 
 # commands, functions and aliases ========================================== }}}
 
