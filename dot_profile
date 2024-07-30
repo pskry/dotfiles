@@ -2,9 +2,6 @@
 # ~/.profile
 #
 
-# load all this only once
-[ -z $__PROFILE_LOADED ] || return
-
 export EDITOR="nvim"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -44,7 +41,5 @@ export SDKMAN_DIR="$HOME/.sdkman"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # ENV setup }}}
-
-export __PROFILE_LOADED=true
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker

@@ -4,7 +4,7 @@
 
 alias mkdir='mkdir -p'
 
-alias ls='exa -g --group-directories-first --icons --color=auto'
+alias ls='eza -g --group-directories-first --icons --color=auto'
 alias l='ls -l'
 alias ll='ls -la'
 
