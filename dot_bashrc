@@ -13,7 +13,7 @@ shopt -s checkwinsize
 [ -f ~/.aliases ] && . ~/.aliases
 
 # Start SSH Keychain
-eval "$(keychain --quiet --eval --agents ssh psr_ed25519 pskry_ed25519)"
+eval "$(keychain --quiet --eval --agents ssh id_ed25519)"
 
 # Start Starship prompt
 eval "$(starship init bash)"

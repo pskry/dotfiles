@@ -18,6 +18,7 @@ alias zegrep='zegrep --color=auto'
 alias zfgrep='zfgrep --color=auto'
 alias zgrep='zgrep --color=auto'
 
+alias vi='nvim'
 alias vim='nvim'
 alias vimdiff='nvim -d'
 
