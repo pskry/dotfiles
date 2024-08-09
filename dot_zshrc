@@ -1,0 +1,140 @@
+#
+# ~/.zshrc
+#
+
+() {
+
+# Zinit init =============================================================== {{{
+
+    ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+    [ ! -d "$ZINIT_HOME" ] && mkdir -p "$(dirname "$ZINIT_HOME")"
+    [ ! -d "$ZINIT_HOME/.git" ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    source "${ZINIT_HOME}/zinit.zsh"
+
+# Zinit init =============================================================== }}}
+
+
+# Zinit plugins ============================================================ {{{
+
+    # Starship prompt
+    zinit ice as"command" from"gh-r" \
+        atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+        atpull"%atclone" src"init.zsh"
+    zinit light starship/starship
+
+    zinit light zsh-users/zsh-syntax-highlighting
+    zinit light zsh-users/zsh-completions
+    zinit light zsh-users/zsh-autosuggestions
+
+    # Better vim-mode
+	zinit ice depth=1
+    zinit light jeffreytse/zsh-vi-mode
+
+	# Use fzf for reverse-history search (postponed)
+	# see https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#execute-extra-commands
+    zinit ice lucid wait
+	# oh-my-zsh plugin (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fzf)
+    zinit snippet OMZP::fzf
+
+	zinit light Aloxaf/fzf-tab
+
+	# oh-my-zsh plugin - https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
+	zinit snippet OMZP::git
+	# oh-my-zsh plugin - https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/command-not-found
+	zinit snippet OMZP::command-not-found
+
+# Zinit plugins ============================================================ }}}
+
+
+# History ================================================================== {{{
+
+    # Enable additional glob operators. (Globbing = pattern matching)
+    # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
+    setopt EXTENDED_GLOB
+
+    # Tell zsh where to store history.
+    HISTFILE=$XDG_DATA_HOME/zsh/history
+
+    # Just in case: If the parent directory doesn't exist, create it.
+    [[ -d $HISTFILE:h ]] || mkdir -p $HISTFILE:h
+
+    # Max number of entries to keep in history file.
+    SAVEHIST=100000
+
+    # Max number of history entries to keep in memory.
+    HISTSIZE=$(( 1.2 * SAVEHIST ))
+
+    # Use modern file-locking mechanisms, for better safety & performance.
+    setopt HIST_FCNTL_LOCK
+
+    # Keep only the most recent copy of each duplicate entry in history.
+    setopt HIST_IGNORE_ALL_DUPS
+	setopt HIST_SAVE_NO_DUPS
+	setopt HIST_IGNORE_DUPS
+	setopt HIST_FIND_NO_DUPS
+
+    # Auto-sync history between concurrent sessions.
+    setopt SHARE_HISTORY
+
+	# Do not save commands starting with a space to history
+	setopt HIST_IGNORE_SPACE
+
+# History ================================================================== }}}
+
+
+# Directories ============================================================== {{{
+
+    # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
+    hash -d dev=$HOME/dev
+
+# Directories ============================================================== }}}
+
+
+# Key bindings ============================================================= {{{
+
+    export KEYTIMEOUT=1 # accept keys like <Esc> immediately
+    bindkey '^p' history-search-backward
+    bindkey '^n' history-search-forward
+    bindkey '^R' history-incremental-search-backward
+
+# Key bindings ============================================================= }}}
+
+
+# Completion styling ======================================================= {{{
+
+    # Disable case sensitive completion matching
+    zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+    # Set list-colors to enable filename colorizing
+	zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+    # Set descriptions format to enable group support
+    # NOTE: don't use escape sequences here, fzf-tab will ignore them
+    zstyle ':completion:*:descriptions' format '[%d]'
+    # Force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+    zstyle ':completion:*' menu no
+
+    # Preview directory's content with eza when completing cd and zoxide
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
+
+	# Load Homebrew command completions
+    type brew &>/dev/null && FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+# Completion styling ======================================================= }}}
+
+
+# Aliases ================================================================== {{{
+
+    [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
+
+# Aliases ================================================================== }}}
+
+    autoload -U compinit && compinit
+
+	# Initialize zoxide (must be run AFTER compinit)
+	eval "$(zoxide init zsh)"
+
+	zinit cdreplay -q
+
+} "$@"
+
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
