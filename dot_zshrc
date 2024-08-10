@@ -135,6 +135,9 @@
 
 	zinit cdreplay -q
 
+    # Display a random colorscript
+    colorscript random
+
 } "$@"
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker

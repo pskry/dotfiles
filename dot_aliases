@@ -35,5 +35,6 @@ alias cz='chezmoi'
 alias df='df -h'
 
 alias hexdump='hexdump -C'
+alias diff='diff --color'
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
