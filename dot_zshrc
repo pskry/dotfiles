@@ -116,6 +116,10 @@
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
     zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
 
+    # Include make targets in completions
+    zstyle ':completion:*:make:*:targets' call-command true
+    zstyle ':completion:*:*:make:*' tag-order 'targets'
+
 	# Load Homebrew command completions
     type brew &>/dev/null && FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
