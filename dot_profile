@@ -31,5 +31,7 @@ unset -f append_path
 # PATH setup =============================================================== }}}
 
 export EDITOR="nvim"
+export SKRYNET_VAULT_PASS_FILE="$HOME/.secret/skrynet_vault_pass"
+export AUTOMATION_USER_PASS_FILE="$HOME/.secret/automation_user_pass"
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
