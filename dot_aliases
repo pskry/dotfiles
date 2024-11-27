@@ -11,9 +11,9 @@ alias cd='z'
 
 alias mkdir='mkdir -p'
 
-alias ls='eza -a -g --group-directories-first --icons --color=auto'
+alias ls='eza -g --group-directories-first --icons --color=auto'
 alias l='ls -l'
-alias ll='ls -la'
+alias ll='ls -laa'
 
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
