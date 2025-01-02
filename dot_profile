@@ -13,7 +13,8 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 # Homebrew ================================================================= {{{
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+BREW_PATH='/opt/homebrew'
+eval "$("$BREW_PATH/bin/brew" shellenv)"
 
 # Homebrew ================================================================= }}}
 
@@ -24,6 +25,15 @@ append_path() { [[ ! "$PATH" =~ "$1" ]] && export PATH="$PATH:$1"; }
 
 prepend_path "$HOME/.platformio/penv/bin"
 prepend_path "$HOME/.local/bin"
+prepend_path "$HOME/go/bin"
+
+prepend_path "$BREW_PATH/opt/openjdk/bin"
+prepend_path "$BREW_PATH/opt/llvm/bin"
+
+# To use the bundled libunwind please use the following LDFLAGS:
+#   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+# To use the bundled libc++ please use the following LDFLAGS:
+#   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
 
 unset -f prepend_path
 unset -f append_path
@@ -31,6 +41,8 @@ unset -f append_path
 # PATH setup =============================================================== }}}
 
 export EDITOR="nvim"
+export LDFLAGS="-L$BREW_PATH/opt/llvm/lib"
+export CPPFLAGS="-I$BREW_PATH/opt/openjdk/include -I$BREW_PATH/opt/llvm/include"
 export SKRYNET_VAULT_PASS_FILE="$HOME/.secret/skrynet_vault_pass"
 export AUTOMATION_USER_PASS_FILE="$HOME/.secret/automation_user_pass"
 export KRB5_CONFIG="$HOME/.krb5.conf"
