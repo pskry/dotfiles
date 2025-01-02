@@ -15,6 +15,7 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 BREW_PATH='/opt/homebrew'
 eval "$("$BREW_PATH/bin/brew" shellenv)"
+export HOMEBREW_NO_ENV_HINTS='true'
 
 # Homebrew ================================================================= }}}
 
