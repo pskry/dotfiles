@@ -86,19 +86,13 @@ vim.opt.scrolloff = 12
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_next, { desc = 'Goto previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Goto next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_next, { desc = 'Goto previous Diagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Goto next Diagnostic message' })
+vim.keymap.set('n', '<leader>de', vim.diagnostic.open_float, { desc = 'Show diagnostic Error messages' })
+vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diagnostic Quickfix list' })
 
 -- Exit terminal mode in the builtin terminal with <Esc><Esc>
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
--- Disable arrow keys in normal mode
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Use CTRL+<hjkl> to switch between windows
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
@@ -143,7 +137,7 @@ require('lazy').setup(
 
     { -- Useful plugin to show you pending keybinds.
       'folke/which-key.nvim',
-      event = 'VimEnter',
+      event = 'VeryLazy',
       opts = {
         icons = {
           -- since we're using a NerdFont, we use the graphical mappings
@@ -153,15 +147,25 @@ require('lazy').setup(
 
         -- Document existing key groups
         spec = {
-          { '<leader>b', group = 'De[b]ug' },
-          { '<leader>n', group = '[N]eoTree' },
-          { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-          { '<leader>d', group = '[D]ocument' },
-          { '<leader>r', group = '[R]ename' },
-          { '<leader>s', group = '[S]earch' },
-          { '<leader>w', group = '[W]orkspace' },
-          { '<leader>t', group = '[T]oggle' },
-          { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+          { 'g', group = 'Goto' },
+          { 's', group = 'Surround' },
+          { 'z', group = 'Fold' },
+          { '"', group = 'Registers' },
+          { "'", group = 'Marks' },
+          { '`', group = 'Marks' },
+          { '[', group = 'Previous' },
+          { ']', group = 'Next' },
+          { '<C-w>', group = 'Window' },
+          { '<leader>', group = 'Leader' },
+          { '<leader>b', group = 'Debug' },
+          { '<leader>n', group = 'NeoTree' },
+          { '<leader>c', group = 'Code', mode = { 'n', 'x' } },
+          { '<leader>d', group = 'Diagnostics' },
+          { '<leader>r', group = 'Rename' },
+          { '<leader>s', group = 'Search' },
+          { '<leader>w', group = 'Workspace' },
+          { '<leader>t', group = 'Toggle' },
+          { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
         },
       },
     }, -- folke/which-key.nvim
@@ -214,15 +218,15 @@ require('lazy').setup(
 
         -- See `:help telescope.builtin`
         local builtin = require 'telescope.builtin'
-        vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-        vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-        vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-        vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-        vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-        vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-        vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-        vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-        vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files' })
+        vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Search Help' })
+        vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = 'Search Keymaps' })
+        vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Search Files' })
+        vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = 'Search Select Telescope' })
+        vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = 'Search current Word' })
+        vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = 'Search by Grep' })
+        vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = 'Search Diagnostics' })
+        vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = 'Search Resume' })
+        vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = 'Search Recent Files' })
         vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = 'Find existing buffers' })
 
         -- Fuzzily search in current buffer
@@ -239,14 +243,14 @@ require('lazy').setup(
             grep_open_files = true,
             prompt_title = 'Live Grep in Open Files',
           }
-        end, { desc = '[S]earch in Open Files' })
+        end, { desc = 'Search in Open Files' })
 
         -- Shortcut for searching your Neovim configuration files
         vim.keymap.set('n', '<leader>sn', function()
           builtin.find_files {
             cwd = vim.fn.stdpath 'config',
           }
-        end, { desc = '[S]earch [N]eovim files' })
+        end, { desc = 'Search Neovim files' })
       end,
     }, -- nvim-telescope/telescope.nvim
 
@@ -307,30 +311,31 @@ require('lazy').setup(
             end
 
             -- Jump to the definition of the word under the cursor
-            map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+            map('gd', require('telescope.builtin').lsp_definitions, 'Goto Definition')
             -- Jump to the declaration of the word under the cursor
-            map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+            map('gD', vim.lsp.buf.declaration, 'Goto Declaration')
             -- Find references for the word under the cursor
-            map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+            map('gr', require('telescope.builtin').lsp_references, 'Goto References')
             -- Jump to the implementation of the word under the cursor
-            map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+            map('gI', require('telescope.builtin').lsp_implementations, 'Goto Implementation')
             -- Jump to the type of the word under the cursor
-            map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+            map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type Definition')
 
             -- Display LSP hover text
-            map('<leader>k', vim.lsp.buf.hover, '[H]over')
-            map('<C-k>', vim.lsp.buf.hover, '[H]over', { 'n', 'i' })
+            map('K', vim.lsp.buf.hover, 'Hover')
+            map('<leader>k', vim.lsp.buf.hover, 'Hover')
+            map('<C-k>', vim.lsp.buf.hover, 'Hover', 'i')
 
             -- Fuzzy find all the symbols in the current document
-            map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+            map('<leader>ds', require('telescope.builtin').lsp_document_symbols, 'Document Symbols')
             -- Fuzzy find all the symbols in the current workspace
-            map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+            map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Workspace Symbols')
 
             -- Rename the symbol under the cursor
-            map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+            map('<leader>rn', vim.lsp.buf.rename, 'Rename')
 
             -- Execute a code action (usually the cursor needs to be on top of a diagnostic)
-            map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+            map('<leader>ca', vim.lsp.buf.code_action, 'Code Action', { 'n', 'x' })
 
             -- The following two autocommands are used to highlight references of the
             -- word under your cursor when your cursor rests there for a little while.
@@ -367,7 +372,7 @@ require('lazy').setup(
             if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
               map('<leader>th', function()
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = attach_event.buf })
-              end, '[T]oggle Inlay [H]ints')
+              end, 'Toggle Inlay Hints')
             end
           end,
         })
@@ -447,7 +452,7 @@ require('lazy').setup(
             require('conform').format { async = true, lsp_format = 'fallback' }
           end,
           mode = 'n',
-          desc = '[F]ormat buffer',
+          desc = 'Format buffer',
         },
       },
       opts = {
@@ -522,12 +527,12 @@ require('lazy').setup(
           --
           -- No, but seriously. Please read `:help ins-completion`, it is really good!
           mapping = cmp.mapping.preset.insert {
-            -- Select the [n]ext item
+            -- Select the next item
             ['<C-n>'] = cmp.mapping.select_next_item(),
-            -- Select the [p]revious item
+            -- Select the previous item
             ['<C-p>'] = cmp.mapping.select_prev_item(),
 
-            -- Scroll the documentation window [b]ack / [f]orward
+            -- Scroll the documentation window back / forward
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
@@ -632,15 +637,15 @@ require('lazy').setup(
       'echasnovski/mini.nvim',
       config = function()
         -- Better Around/Inside textobjects, i.e.
-        --  - va)  - [V]isually select [A]round [)]paren
-        --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-        --  - ci'  - [C]hange [I]nside [']quote
+        --  - va)  - Visually select Around )paren
+        --  - yinq - Yank Inside Next Quote
+        --  - ci'  - Change Inside 'quote
         require('mini.ai').setup { n_lines = 500 }
 
         -- Add/delete/replace surroundings (brackets, quotes, etc.)
-        -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-        -- - sd'   - [S]urround [D]elete [']quotes
-        -- - sr)'  - [S]urround [R]eplace [)] [']
+        -- - saiw) - Surround Add Inner Word )Paren
+        -- - sd'   - Surround Delete 'quotes
+        -- - sr)'  - Surround Replace ) '
         require('mini.surround').setup()
 
         -- Simple and easy statusline.
