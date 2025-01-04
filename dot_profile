@@ -21,12 +21,14 @@ export HOMEBREW_NO_ENV_HINTS='true'
 
 # PATH setup =============================================================== {{{
 
+export GOPATH="$HOME/go"
+
 prepend_path() { [[ ! "$PATH" =~ "$1" ]] && export PATH="$1:$PATH"; }
 append_path() { [[ ! "$PATH" =~ "$1" ]] && export PATH="$PATH:$1"; }
 
 prepend_path "$HOME/.platformio/penv/bin"
 prepend_path "$HOME/.local/bin"
-prepend_path "$HOME/go/bin"
+prepend_path "$GOPATH/bin"
 
 prepend_path "$BREW_PATH/opt/openjdk/bin"
 prepend_path "$BREW_PATH/opt/llvm/bin"

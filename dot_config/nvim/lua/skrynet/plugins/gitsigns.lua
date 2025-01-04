@@ -1,11 +1,43 @@
--- Adds git related signs to the gutter, as well as utilities for managing changes
--- NOTE: gitsigns is already included in init.lua but contains only the base
--- config. This will add also the recommended keymaps.
-
+-- INFO: Super fast git decorations implemented purely in Lua.
+--       Adds git related signs to the gutter, as well as utilities for managing changes
+-- DOCS: https://github.com/lewis6991/gitsigns.nvim
 return {
   {
     'lewis6991/gitsigns.nvim',
     opts = {
+      signs = {
+        add = { text = '┃' },
+        change = { text = '┃' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked = { text = '┆' },
+      },
+      signs_staged = {
+        add = { text = '┃' },
+        change = { text = '┃' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked = { text = '┆' },
+      },
+      -- signs = {
+      --   add = { text = '+' },
+      --   change = { text = '~' },
+      --   delete = { text = '_' },
+      --   topdelete = { text = '‾' },
+      --   changedelete = { text = '~' },
+      --   untracked = { text = 'x' },
+      -- },
+      -- signs_staged = {
+      --   add = { text = '+' },
+      --   change = { text = '~' },
+      --   delete = { text = '_' },
+      --   topdelete = { text = '‾' },
+      --   changedelete = { text = '~' },
+      --   untracked = { text = 'x' },
+      -- },
+      signs_staged_enable = true,
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
 
@@ -15,6 +47,7 @@ return {
           vim.keymap.set(mode, l, r, opts)
         end
 
+        -- [[ Keymap ]]
         -- Navigation
         map('n', ']c', function()
           if vim.wo.diff then
@@ -52,6 +85,7 @@ return {
         map('n', '<leader>hD', function()
           gitsigns.diffthis '@'
         end, { desc = 'git [D]iff against last commit' })
+
         -- Toggles
         map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
         map('n', '<leader>tD', gitsigns.toggle_deleted, { desc = '[T]oggle git show [D]eleted' })
