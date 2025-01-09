@@ -93,6 +93,7 @@ vim.keymap.set('n', '<leader>dq', vim.diagnostic.setloclist, { desc = 'Open diag
 
 -- Exit terminal mode in the builtin terminal with <Esc><Esc>
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<Esc><Esc><Esc>', '<C-\\><C-n>:q<CR>', { desc = 'Close terminal window' })
 
 -- Use CTRL+<hjkl> to switch between windows
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
@@ -161,7 +162,8 @@ require('lazy').setup(
           { '<leader>n', group = 'NeoTree' },
           { '<leader>c', group = 'Code', mode = { 'n', 'x' } },
           { '<leader>d', group = 'Diagnostics' },
-          { '<leader>r', group = 'Rename' },
+          { '<leader>r', group = 'Refactor Code' },
+          { '<leader>rp', group = 'Debug Print' },
           { '<leader>s', group = 'Search' },
           { '<leader>w', group = 'Workspace' },
           { '<leader>t', group = 'Toggle' },
@@ -225,6 +227,8 @@ require('lazy').setup(
         vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = 'Search current Word' })
         vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = 'Search by Grep' })
         vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = 'Search Diagnostics' })
+        vim.keymap.set('n', '<leader>sm', builtin.man_pages, { desc = 'Search Man Pages' })
+        vim.keymap.set('n', '<leader>sR', builtin.registers, { desc = 'Search Registers' })
         vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = 'Search Resume' })
         vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = 'Search Recent Files' })
         vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = 'Find existing buffers' })
@@ -298,9 +302,7 @@ require('lazy').setup(
           'hrsh7th/cmp-nvim-lsp',
         },
       },
-      opts = {
-        inlay_hints = { enabled = true },
-      },
+      opts = {},
       config = function()
         vim.api.nvim_create_autocmd('LspAttach', {
           group = vim.api.nvim_create_augroup('skrynet-lsp-attach', { clear = true }),
@@ -327,7 +329,7 @@ require('lazy').setup(
             map('<C-k>', vim.lsp.buf.hover, 'Hover', 'i')
 
             -- Fuzzy find all the symbols in the current document
-            map('<leader>ds', require('telescope.builtin').lsp_document_symbols, 'Document Symbols')
+            map('<leader>cs', require('telescope.builtin').lsp_document_symbols, 'Document Symbols')
             -- Fuzzy find all the symbols in the current workspace
             map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Workspace Symbols')
 
@@ -375,7 +377,7 @@ require('lazy').setup(
               end, 'Toggle Inlay Hints')
             end
           end,
-        })
+        }) -- on_attach (autocmd 'LspAttach')
 
         -- Configure diagnostic symbols in the gutter
         local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
@@ -401,11 +403,28 @@ require('lazy').setup(
           -- },
           ansiblels = {},
           clangd = {},
-          gopls = {},
+          gopls = {
+            settings = {
+              gopls = {
+                hints = {
+                  assignVariableTypes = true,
+                  compositeLiteralFields = true,
+                  compositeLiteralTypes = true,
+                  constantValues = true,
+                  functionTypeParameters = true,
+                  parameterNames = true,
+                  rangeVariableTypes = true,
+                },
+              },
+            },
+          },
           rust_analyzer = {},
           lua_ls = {
             settings = {
               Lua = {
+                hint = {
+                  enable = true,
+                },
                 completion = {
                   callSnippet = 'Replace',
                 },
@@ -438,7 +457,9 @@ require('lazy').setup(
             end,
           },
         }
-      end,
+
+        vim.lsp.set_log_level 'debug'
+      end, -- config
     }, -- neovim/nvim-lspconfig
 
     { -- Autoformat

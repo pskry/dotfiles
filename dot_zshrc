@@ -8,11 +8,11 @@
 
     ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
     [ ! -d "$ZINIT_HOME" ] && mkdir -p "$(dirname "$ZINIT_HOME")"
-    [ ! -d "$ZINIT_HOME/.git" ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    [ ! -d "$ZINIT_HOME/.git" ] \
+        && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
     source "${ZINIT_HOME}/zinit.zsh"
 
 # Zinit init =============================================================== }}}
-
 
 # Zinit plugins ============================================================ {{{
 
@@ -22,29 +22,31 @@
         atpull"%atclone" src"init.zsh"
     zinit light starship/starship
 
+    # DOCS: https://github.com/zsh-users/zsh-syntax-highlighting
     zinit light zsh-users/zsh-syntax-highlighting
+    # DOCS: https://github.com/zsh-users/zsh-completions
     zinit light zsh-users/zsh-completions
+    # DOCS: https://github.com/zsh-users/zsh-autosuggestions
     zinit light zsh-users/zsh-autosuggestions
 
-    # Better vim-mode
-	zinit ice depth=1
+    # DOCS: https://github.com/jeffreytse/zsh-vi-mode
+    zinit ice depth=1
     zinit light jeffreytse/zsh-vi-mode
 
-	# Use fzf for reverse-history search (postponed)
-	# see https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#execute-extra-commands
+    # Use fzf for reverse-history search (postponed)
+    # DOCS: https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#execute-extra-commands
     zinit ice lucid wait
-	# oh-my-zsh plugin (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fzf)
+    # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fzf
     zinit snippet OMZP::fzf
 
-	zinit light Aloxaf/fzf-tab
+    zinit light Aloxaf/fzf-tab
 
-	# oh-my-zsh plugin - https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
-	zinit snippet OMZP::git
-	# oh-my-zsh plugin - https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/command-not-found
-	zinit snippet OMZP::command-not-found
+    # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
+    zinit snippet OMZP::git
+    # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/command-not-found
+    zinit snippet OMZP::command-not-found
 
 # Zinit plugins ============================================================ }}}
-
 
 # History ================================================================== {{{
 
@@ -62,33 +64,32 @@
     SAVEHIST=100000
 
     # Max number of history entries to keep in memory.
-    HISTSIZE=$(( 1.2 * SAVEHIST ))
+    HISTSIZE="$(( 1.2 * SAVEHIST ))"
 
     # Use modern file-locking mechanisms, for better safety & performance.
     setopt HIST_FCNTL_LOCK
 
     # Keep only the most recent copy of each duplicate entry in history.
     setopt HIST_IGNORE_ALL_DUPS
-	setopt HIST_SAVE_NO_DUPS
-	setopt HIST_IGNORE_DUPS
-	setopt HIST_FIND_NO_DUPS
+    setopt HIST_SAVE_NO_DUPS
+    setopt HIST_IGNORE_DUPS
+    setopt HIST_FIND_NO_DUPS
 
     # Auto-sync history between concurrent sessions.
     setopt SHARE_HISTORY
 
-	# Do not save commands starting with a space to history
-	setopt HIST_IGNORE_SPACE
+    # Do not save commands starting with a space to history
+    setopt HIST_IGNORE_SPACE
 
 # History ================================================================== }}}
-
 
 # Directories ============================================================== {{{
 
     # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
     hash -d dev=$HOME/dev
+    hash -d nvim=$XDG_CONFIG_HOME/nvim
 
 # Directories ============================================================== }}}
-
 
 # Key bindings ============================================================= {{{
 
@@ -99,17 +100,35 @@
 
 # Key bindings ============================================================= }}}
 
+# Functions ================================================================ {{{
+
+function vdiff() {
+    if [ $# -ne 2 ]; then
+        echo "usage: vdiff file1 file2"
+    else
+        diff \
+        --side-by-side \
+        --report-identical-files \
+        --width 80 \
+        --color=always \
+        --suppress-common-lines \
+        "$@"
+    fi
+}
+
+# Functions ================================================================ }}}
 
 # Completion styling ======================================================= {{{
 
     # Disable case sensitive completion matching
     zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
     # Set list-colors to enable filename colorizing
-	zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
     # Set descriptions format to enable group support
     # NOTE: don't use escape sequences here, fzf-tab will ignore them
     zstyle ':completion:*:descriptions' format '[%d]'
-    # Force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
+    # Force zsh not to show completion menu,
+    # which allows fzf-tab to capture the unambiguous prefix
     zstyle ':completion:*' menu no
 
     # Preview directory's content with eza when completing cd and zoxide
@@ -120,11 +139,10 @@
     zstyle ':completion:*:make:*:targets' call-command true
     zstyle ':completion:*:*:make:*' tag-order 'targets'
 
-	# Load Homebrew command completions
-    type brew &>/dev/null && FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+    # Load Homebrew command completions
+    FPATH="/opt/homebrew/share/zsh/site-functions:${FPATH}"
 
 # Completion styling ======================================================= }}}
-
 
 # Aliases ================================================================== {{{
 
@@ -132,23 +150,25 @@
 
 # Aliases ================================================================== }}}
 
-    autoload -U compinit && compinit
+    autoload -U compinit
 
-	# Initialize zoxide (must be run AFTER compinit)
-	eval "$(zoxide init zsh)"
+    compinit
 
-	zinit cdreplay -q
+    # Initialize zoxide (must be run AFTER compinit)
+    eval "$(zoxide init zsh)"
 
-    # Display a random colorscript
-    colorscript random
-
+    zinit cdreplay -q
 
 # SDKs ===================================================================== {{{
 
     export SDKMAN_DIR="$HOME/.sdkman"
-    [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+    [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] \
+        && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # SDKs ===================================================================== }}}
+
+    # Display a random colorscript
+    # colorscript random
 
 } "$@"
 
