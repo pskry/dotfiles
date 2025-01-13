@@ -107,6 +107,8 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '[b', ':bnext<CR>', { desc = 'Previous buffer', silent = true })
+vim.keymap.set('n', ']b', ':bnext<CR>', { desc = 'Next buffer', silent = true })
 
 -- Basic Keymaps =========================================================== }}}
 
@@ -181,13 +183,25 @@ require('lazy').setup({
         keys = {},
       },
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ocument' },
-        { '<leader>r', group = '[R]ename' },
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>w', group = '[W]orkspace' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '[', group = 'Previous' },
+        { ']', group = 'Next' },
+        { 'g', group = 'Goto', mode = { 'n', 'v' } },
+        { "g'", group = 'Mark' },
+        { 'g`', group = 'Mark' },
+        { 's', group = 'Surround', mode = { 'n', 'v' } },
+        { 'z', group = 'Fold', mode = { 'n', 'v' } },
+        { '"', group = 'Registers', mode = { 'n', 'v' } },
+        { "'", group = 'Mark' },
+        { '`', group = 'Mark' },
+        { '<C-w>', group = 'Window', mode = { 'n', 'v' } },
+        { '<leader>', group = 'Leader', mode = { 'n', 'v' } },
+        { '<leader>c', group = 'Code', mode = { 'n', 'x' } },
+        { '<leader>d', group = 'Document' },
+        { '<leader>r', group = 'Rename' },
+        { '<leader>s', group = 'Search' },
+        { '<leader>w', group = 'Workspace' },
+        { '<leader>t', group = 'Toggle' },
+        { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
       },
     },
     keys = {},
@@ -329,26 +343,25 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require('telescope.builtin')
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sm', builtin.man_pages, { desc = '[S]earch [M]an Pages' })
-      vim.keymap.set('n', '<leader>sR', builtin.registers, { desc = '[S]earch [R]egisters' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = 'Search Help' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = 'Search Keymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = 'Search Files' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = 'Search Select Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = 'Search current Word' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = 'Search by Grep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = 'Search Diagnostics' })
+      vim.keymap.set('n', '<leader>sm', builtin.man_pages, { desc = 'Search Man Pages' })
+      vim.keymap.set('n', '<leader>sR', builtin.registers, { desc = 'Search Registers' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = 'Search Resume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = 'Search Recent Files' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = 'Find existing buffers' })
 
-      -- Fuzzily search in current buffer
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown({
           winblend = 10,
           previewer = false,
         }))
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = 'Search in current buffer' })
 
       -- Live Grep in Open Files
       vim.keymap.set('n', '<leader>s/', function()
@@ -356,7 +369,7 @@ require('lazy').setup({
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         })
-      end, { desc = '[S]earch [/] in Open Files' })
+      end, { desc = 'Search in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
@@ -529,7 +542,7 @@ require('lazy').setup({
           require('conform').format({ async = true, lsp_format = 'fallback' })
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'Format buffer',
       },
     },
     opts = {
@@ -761,22 +774,22 @@ require('lazy').setup({
 
           local builtin = require('telescope.builtin')
           -- Goto stuff
-          map('gd', builtin.lsp_definitions, '[G]oto [D]efinition')
-          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-          map('gr', builtin.lsp_references, '[G]oto [R]eferences')
-          map('gI', builtin.lsp_implementations, '[G]oto [I]mplementation')
-          map('<leader>D', builtin.lsp_type_definitions, 'Type [D]efinition')
-          map('<leader>ds', builtin.lsp_document_symbols, '[D]ocument [S]ymbols')
+          map('gd', builtin.lsp_definitions, 'Goto Definition')
+          map('gD', vim.lsp.buf.declaration, 'Goto Declaration')
+          map('gr', builtin.lsp_references, 'Goto References')
+          map('gI', builtin.lsp_implementations, 'Goto Implementation')
+          map('<leader>D', builtin.lsp_type_definitions, 'Type Definition')
+          map('<leader>ds', builtin.lsp_document_symbols, 'Document Symbols')
 
           -- Code actions
 
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+          map('<leader>ca', vim.lsp.buf.code_action, 'Code Action', { 'n', 'x' })
 
           -- Workspace
-          map('<leader>ws', builtin.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+          map('<leader>ws', builtin.lsp_dynamic_workspace_symbols, 'Workspace Symbols')
 
           -- Refactoring
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>rn', vim.lsp.buf.rename, 'Rename')
 
           -- LSP hover text
           map('K', vim.lsp.buf.hover, 'Hover')
@@ -793,7 +806,7 @@ require('lazy').setup({
           if client.supports_method(methods.textDocument_inlayHint) then
             map('<leader>th', function()
               vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = attach_event.buf }))
-            end, '[T]oggle Inlay [H]ints')
+            end, 'Toggle Inlay Hints')
           end
 
           -- document highlight
