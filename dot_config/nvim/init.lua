@@ -32,9 +32,9 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Indent
--- vim.opt.tabstop = 4
--- vim.opt.shiftwidth = 4
--- vim.opt.smartindent = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.smartindent = true
 vim.opt.breakindent = true
 
 -- Line numbers
@@ -67,9 +67,9 @@ vim.opt.termguicolors = true
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.signcolumn = 'yes'
--- vim.opt.linebreak = true
--- vim.opt.wrap = true
--- vim.opt.virtualedit = 'block'
+vim.opt.linebreak = true
+vim.opt.wrap = true
+vim.opt.virtualedit = 'block'
 vim.opt.showmode = false
 
 -- Updates
@@ -481,6 +481,7 @@ require('lazy').setup({
     opts = {
       linters_by_ft = {
         markdown = { 'markdownlint' },
+        go = { 'golangcilint' },
       },
     },
     config = function(_, opts)
@@ -565,6 +566,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        go = { 'goimports' },
       },
     },
   }, -- stevearc/conform.nvim }}}
@@ -665,6 +667,50 @@ require('lazy').setup({
       cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
     end,
   }, -- windwp/nvim-autopairs }}}
+  { -- ray-x/go.nvim {{{
+    'ray-x/go.nvim',
+    event = { 'CmdlineEnter' },
+    ft = { 'go', 'gomod' },
+    build = ':lua require("go.install").update_all_sync()',
+    -- enabled = false,
+    dependencies = {
+      'ray-x/guihua.lua',
+      'neovim/nvim-lspconfig',
+      'nvim-treesitter/nvim-treesitter',
+    },
+    config = function()
+      require('go').setup({
+        diagnostics = false, -- use our own diagnostic setup
+        goimports = 'goimports',
+        gofmt = 'gofumpt',
+        tag_transform = false,
+        verbose = true,
+        log_path = vim.fn.stdpath('data') .. '/go.vim.log',
+        lsp_cfg = true, -- true: apply go.nvim non-default gopls setup
+        lsp_gofumpt = false, -- true: set default gofmt in gopls format to gofumpt
+        lsp_on_attach = true, -- if a on_attach function provided:  attach on_attach function to gopls
+        -- true: will use go.nvim on_attach if true
+        -- nil/false do nothing
+
+        lsp_codelens = true,
+        -- gopls_remote_auto = true, -- set to false is you do not want to pass -remote=auto to gopls(enable share)
+        -- gopls_cmd = nil,
+        -- if you need to specify gopls path and cmd, e.g {"/home/user/lsp/gopls", "-logfile", "/var/log/gopls.log" }
+        diagnostic = {
+          hdlr = true,
+        },
+        -- lsp_diag_hdlr = true, -- hook lsp diag handler
+        dap_debug = true, -- set to true to enable dap
+        dap_debug_keymap = true, -- set keymaps for debugger
+        dap_debug_gui = true, -- set to true to enable dap gui, highly recommand
+        dap_debug_vt = true, -- set to true to enable dap virtual text
+
+        test_runner = 'richgo', -- richgo, go test, richgo, dlv, ginkgo
+        verbose_tests = true, -- set to add verbose flag to tests
+        run_in_floaterm = true, -- set to true to run in float window.
+      })
+    end,
+  }, -- ray-x/go.nvim }}}
   -- LSP Plugins ===========================================================
   { -- neovim/nvim-lspconfig {{{
     'neovim/nvim-lspconfig',
@@ -749,14 +795,14 @@ require('lazy').setup({
       -- codelens = {
       --   enabled = true,
       -- },
-      -- capabilities = {
-      --   workspace = {
-      --     fileOperations = {
-      --       didRename = true,
-      --       willRename = true,
-      --     },
-      --   },
-      -- },
+      capabilities = {
+        workspace = {
+          fileOperations = {
+            didRename = true,
+            willRename = true,
+          },
+        },
+      },
     },
     config = function(_, opts)
       vim.api.nvim_create_autocmd('LspAttach', { -- on_attach {{{
@@ -835,6 +881,9 @@ require('lazy').setup({
           end
         end,
       }) -- on_attach }}}
+
+      -- LSP settings
+      vim.lsp.log.set_level(vim.lsp.log.levels.WARN)
 
       -- diagnostics
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics or {}))
