@@ -26,9 +26,11 @@ alias zfgrep='zfgrep --color=auto'
 alias zgrep='zgrep --color=auto'
 
 alias vim='nvim'
+alias fvim='nvim "$(fzf)"'
 alias vimdiff='nvim -d'
 
 alias cat='bat --theme=gruvbox-dark'
+alias fm='yazi'
 
 alias cz='chezmoi'
 
