@@ -46,8 +46,9 @@ unset -f append_path
 export EDITOR="nvim"
 export LDFLAGS="-L$BREW_PATH/opt/llvm/lib"
 export CPPFLAGS="-I$BREW_PATH/opt/openjdk/include -I$BREW_PATH/opt/llvm/include"
-export SKRYNET_VAULT_PASS_FILE="$HOME/.secret/skrynet_vault_pass"
-export AUTOMATION_USER_PASS_FILE="$HOME/.secret/automation_user_pass"
+export ANSIBLE_VAULT_PASSWORD_FILE="$HOME/.secret/skrynet_vault_pass"
+export ANSIBLE_CONNECTION_PASSWORD_FILE="$HOME/.secret/skrynet_connect_pass"
+export BECOME_PASSWORD_FILE="$HOME/.secret/automation_user_pass"
 export KRB5_CONFIG="$HOME/.krb5.conf"
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
