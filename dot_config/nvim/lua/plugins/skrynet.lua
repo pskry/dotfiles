@@ -59,6 +59,7 @@ return {
           yamllint = 'yaml',
           ['ansible-lint'] = 'yaml',
           tfstate = 'json',
+          ['tfstate.backup'] = 'json',
         },
         pattern = {},
       }
@@ -319,7 +320,7 @@ return {
   {
     'mfussenegger/nvim-lint',
     dependencies = {
-      { 'williamboman/mason.nvim', opts = {} },
+      { 'mason-org/mason.nvim', opts = {} },
       { 'rshkarin/mason-nvim-lint' },
     },
     opts = function(_, opts)
@@ -376,7 +377,7 @@ return {
   {
     'stevearc/oil.nvim',
     dependencies = {
-      { 'echasnovski/mini.icons', opts = {} },
+      { 'nvim-mini/mini.icons', opts = {} },
     },
     lazy = false,
     ---@module 'oil'
@@ -544,6 +545,8 @@ return {
           '*/host_vars/*/*_vault.yaml',
           '*/group_vars/*/*_vault.yml',
           '*/group_vars/*/*_vault.yaml',
+          '*/HpSetup*.txt',
+          '*/*_vault.tfstate',
         },
         vault_id = 'default',
       }
@@ -552,6 +555,7 @@ return {
       -- Load only when opening vault files
       'BufReadPre */*_vault.yml',
       'BufReadPre */*_vault.yaml',
+      'BufReadPre */*_vault.tfstate',
     },
   },
 

@@ -13,9 +13,10 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 # Homebrew ================================================================= {{{
 
-BREW_PATH='/opt/homebrew'
-eval "$("$BREW_PATH/bin/brew" shellenv)"
-export HOMEBREW_NO_ENV_HINTS='true'
+# unset HOMEBREW_SHELLENV_PREFIX
+HOMEBREW_PREFIX='/opt/homebrew'
+eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
+# export HOMEBREW_NO_ENV_HINTS='true'
 
 # Homebrew ================================================================= }}}
 
@@ -23,15 +24,16 @@ export HOMEBREW_NO_ENV_HINTS='true'
 
 export GOPATH="$HOME/go"
 
-prepend_path() { [[ ! "$PATH" =~ "$1" ]] && export PATH="$1:$PATH"; }
-append_path() { [[ ! "$PATH" =~ "$1" ]] && export PATH="$PATH:$1"; }
+# append_path() { export PATH="$PATH:$1"; }
+prepend_path() { export PATH="$1:$PATH"; }
 
 prepend_path "$HOME/.platformio/penv/bin"
 prepend_path "$HOME/.local/bin"
 prepend_path "$GOPATH/bin"
 
-prepend_path "$BREW_PATH/opt/openjdk/bin"
-prepend_path "$BREW_PATH/opt/llvm/bin"
+prepend_path "$HOMEBREW_PREFIX/opt/openjdk/bin"
+prepend_path "$HOMEBREW_PREFIX/opt/llvm/bin"
+prepend_path "$HOMEBREW_PREFIX/opt/make/libexec/gnubin"
 
 # To use the bundled libunwind please use the following LDFLAGS:
 #   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
@@ -39,16 +41,41 @@ prepend_path "$BREW_PATH/opt/llvm/bin"
 #   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
 
 unset -f prepend_path
-unset -f append_path
+# unset -f append_path
+
+eval "$(clean-path.py)"
 
 # PATH setup =============================================================== }}}
 
 export EDITOR="nvim"
-export LDFLAGS="-L$BREW_PATH/opt/llvm/lib"
-export CPPFLAGS="-I$BREW_PATH/opt/openjdk/include -I$BREW_PATH/opt/llvm/include"
+export LDFLAGS="-L$HOMEBREW_PREFIX/opt/llvm/lib"
+export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include -I$HOMEBREW_PREFIX/opt/llvm/include"
 export ANSIBLE_VAULT_PASSWORD_FILE="$HOME/.secret/skrynet_vault_pass"
 export ANSIBLE_CONNECTION_PASSWORD_FILE="$HOME/.secret/skrynet_connect_pass"
 export BECOME_PASSWORD_FILE="$HOME/.secret/automation_user_pass"
 export KRB5_CONFIG="$HOME/.krb5.conf"
+
+# SSH Agent ================================================================ {{{
+
+SSH_ENV="$HOME/.ssh/agent-environment"
+
+start_agent() {
+	ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
+	chmod 600 "$SSH_ENV"
+	. "$SSH_ENV" >/dev/null
+	ssh-add >/dev/null
+	[ -f "$HOME/.ssh/hal9000_ed25519" ] && ssh-add "$HOME/.ssh/hal9000_ed25519"
+}
+
+if [ -f "$SSH_ENV" ]; then
+	. "$SSH_ENV" >/dev/null
+	ps -ef | grep $SSH_AGENT_PID | grep ssh-agent$ >/dev/null || {
+		start_agent
+	}
+else
+	start_agent
+fi
+
+# SSH Agent ================================================================ }}}
 
 # vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker

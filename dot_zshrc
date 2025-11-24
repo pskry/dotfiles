@@ -172,7 +172,7 @@ function vdiff() {
 
 } "$@"
 
-# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
-
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/tofu tofu
+
+# vim:ts=4:sw=4:ft=zsh:fenc=utf-8:fdm=marker
