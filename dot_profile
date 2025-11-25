@@ -15,7 +15,7 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 # unset HOMEBREW_SHELLENV_PREFIX
 HOMEBREW_PREFIX='/opt/homebrew'
-eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
+[ -d "$HOMEBREW_PREFIX" ] && eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
 # export HOMEBREW_NO_ENV_HINTS='true'
 
 # Homebrew ================================================================= }}}
@@ -25,7 +25,11 @@ eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
 export GOPATH="$HOME/go"
 
 # append_path() { export PATH="$PATH:$1"; }
-prepend_path() { export PATH="$1:$PATH"; }
+prepend_path() {
+	if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+		export PATH="${PATH:+"$PATH:"}$1"
+	fi
+}
 
 prepend_path "$HOME/.platformio/penv/bin"
 prepend_path "$HOME/.local/bin"
@@ -43,16 +47,11 @@ prepend_path "$HOMEBREW_PREFIX/opt/make/libexec/gnubin"
 unset -f prepend_path
 # unset -f append_path
 
-eval "$(clean-path.py)"
-
 # PATH setup =============================================================== }}}
 
 export EDITOR="nvim"
 export LDFLAGS="-L$HOMEBREW_PREFIX/opt/llvm/lib"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include -I$HOMEBREW_PREFIX/opt/llvm/include"
-export ANSIBLE_VAULT_PASSWORD_FILE="$HOME/.secret/skrynet_vault_pass"
-export ANSIBLE_CONNECTION_PASSWORD_FILE="$HOME/.secret/skrynet_connect_pass"
-export BECOME_PASSWORD_FILE="$HOME/.secret/automation_user_pass"
 export KRB5_CONFIG="$HOME/.krb5.conf"
 
 # SSH Agent ================================================================ {{{
