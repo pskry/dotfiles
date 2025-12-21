@@ -53,19 +53,49 @@ return {
 
   {
     'nvim-treesitter/nvim-treesitter',
-    opts = function(_, _)
+    opts = function(_, opts)
       vim.filetype.add {
+        filename = {
+          ['.ansible-lint'] = 'yaml.ansible',
+        },
         extension = {
           yamllint = 'yaml',
-          ['ansible-lint'] = 'yaml',
           tfstate = 'json',
           ['tfstate.backup'] = 'json',
         },
         pattern = {},
       }
+
+      opts.highlight = {
+        enable = true,
+        disable = { 'just' },
+      }
+      opts.ensure_installed = {
+        'yaml',
+        'jinja2',
+      }
     end,
   },
+  {
+    'Glench/Vim-Jinja2-Syntax',
+    ft = {
+      'jinja',
+      'yaml.jinja',
+      'dosini.jinja',
+      'conf.jinja',
+    },
+  },
 
+  -- {
+  --   'stevearc/conform.nvim',
+  --   ---@type conform.setupOpts
+  --   opts = {
+  --     formatters_by_ft = {
+  --       ['yaml.ansible'] = { 'ansible-lint' },
+  --     },
+  --   },
+  -- },
+  --
   {
     'nvim-neo-tree/neo-tree.nvim',
     dependencies = {
@@ -191,7 +221,10 @@ return {
     },
     opts = {},
   },
-
+  {
+    'NoahTheDuke/vim-just',
+    ft = { 'just' },
+  },
   {
     'folke/snacks.nvim',
     ---@type snacks.Config
@@ -556,6 +589,20 @@ return {
       'BufReadPre */*_vault.yml',
       'BufReadPre */*_vault.yaml',
       'BufReadPre */*_vault.tfstate',
+    },
+  },
+
+  {
+    '2kabhishek/nerdy.nvim',
+    dependencies = {
+      'folke/snacks.nvim',
+    },
+    cmd = 'Nerdy',
+    opts = {
+      max_recents = 30, -- Configure recent icons limit
+      add_default_keybindings = true, -- Add default keybindings
+      copy_to_clipboard = false, -- Copy glyph to clipboard instead of inserting
+      copy_register = '+', -- Register to use for copying (if `copy_to_clipboard` is true)
     },
   },
 

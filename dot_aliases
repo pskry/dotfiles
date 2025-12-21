@@ -33,6 +33,9 @@ alias cat='bat --theme=gruvbox-dark'
 alias fm='yazi'
 
 alias cz='chezmoi'
+alias jj='just'
+alias lg='lazygit'
+alias mux='tmuxinator'
 
 alias df='df -h'
 alias du='du -h'

@@ -14,9 +14,13 @@ export XDG_CACHE_HOME="$HOME/.cache"
 # Homebrew ================================================================= {{{
 
 # unset HOMEBREW_SHELLENV_PREFIX
-HOMEBREW_PREFIX='/opt/homebrew'
+export HOMEBREW_PREFIX='/opt/homebrew'
 [ -d "$HOMEBREW_PREFIX" ] && eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
 # export HOMEBREW_NO_ENV_HINTS='true'
+
+if [ -f "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh" ]; then
+    source "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh"
+fi
 
 # Homebrew ================================================================= }}}
 
@@ -26,9 +30,9 @@ export GOPATH="$HOME/go"
 
 # append_path() { export PATH="$PATH:$1"; }
 prepend_path() {
-	if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-		export PATH="${PATH:+"$PATH:"}$1"
-	fi
+    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+        export PATH="${PATH:+"$PATH:"}$1"
+    fi
 }
 
 prepend_path "$HOME/.platformio/penv/bin"
@@ -59,20 +63,20 @@ export KRB5_CONFIG="$HOME/.krb5.conf"
 SSH_ENV="$HOME/.ssh/agent-environment"
 
 start_agent() {
-	ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
-	chmod 600 "$SSH_ENV"
-	. "$SSH_ENV" >/dev/null
-	ssh-add >/dev/null
-	[ -f "$HOME/.ssh/hal9000_ed25519" ] && ssh-add "$HOME/.ssh/hal9000_ed25519"
+    ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
+    chmod 600 "$SSH_ENV"
+    . "$SSH_ENV" >/dev/null
+    ssh-add >/dev/null
+    [ -f "$HOME/.ssh/hal9000_ed25519" ] && ssh-add "$HOME/.ssh/hal9000_ed25519"
 }
 
 if [ -f "$SSH_ENV" ]; then
-	. "$SSH_ENV" >/dev/null
-	ps -ef | grep $SSH_AGENT_PID | grep ssh-agent$ >/dev/null || {
-		start_agent
-	}
+    . "$SSH_ENV" >/dev/null
+    ps -ef | grep $SSH_AGENT_PID | grep ssh-agent$ >/dev/null || {
+        start_agent
+    }
 else
-	start_agent
+    start_agent
 fi
 
 # SSH Agent ================================================================ }}}
