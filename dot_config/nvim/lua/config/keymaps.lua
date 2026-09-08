@@ -1,3 +1,5 @@
+local wk = require 'which-key'
+
 local set = vim.keymap.set
 local del = vim.keymap.del
 
@@ -15,3 +17,18 @@ set('n', '<leader>bR', '<cmd>edit!<cr><esc>', { desc = 'Reload Buffer from Disk'
 set({ 'n', 'i' }, '<M-/>', function() vim.cmd 'normal gccj' end, { desc = 'Toggle comment line' })
 set({ 'v'      }, '<M-/>', function() vim.cmd 'normal gcgv' end, { desc = 'Toggle comment' })
 -- stylua: ignore end
+
+set('n', '<leader>ml', ':diffget REMOTE<CR>', { desc = 'Merge: take REMOTE (right)' })
+set('n', '<leader>mh', ':diffget LOCAL<CR>', { desc = 'Merge: take LOCAL (left)' })
+set('n', '<leader>mb', ':diffget BASE<CR>', { desc = 'Merge: take BASE' })
+
+-- set('n', '<leader>R', '<cmd>checktime<cr><cmd>e %<cr><cmd>LspRestart<cr>', { desc = 'Reload from disk' })
+set('n', '<leader>R', '<cmd>e %<cr><cmd>checktime<cr><cmd>LspRestart<cr>', { desc = 'Reload from disk' })
+
+wk.add {
+  {
+    '<leader>m',
+    group = 'merge',
+    icon = '',
+  },
+}

@@ -1,23 +1,37 @@
 #
 # ~/.aliases
 #
+# vim:ft=sh:fenc=utf-8:fdm=marker
 
-# Type '-' to return to your previous dir.
-alias -- -='cd -'
-# '--' signifies the end of options. Otherwise, '-=...' would be interpreted as
-# a flag.
+# ls aliases =============================================================== {{{
 
-alias cd='z'
+if which eza &>/dev/null; then
+  alias ls='eza -g --group-directories-first --icons --color=auto'
+elif which exa &>/dev/null; then
+  # exa does not list pwd and parent directory with only one '-a' flag
+  alias ls='exa -a -g --group-directories-first --icons --color=auto'
+elif [ "$(uname -s)" == "Linux" ]; then
+  alias ls='ls --group-directories-first --color=auto'
+else
+  # /bin/ls on FreeBSD (and macOS/Darwin) does not have --group-directories-first :(
+  alias ls='ls --color=auto'
+fi
 
-alias mkdir='mkdir -p'
-
-alias ls='eza -g --group-directories-first --icons --color=auto'
 alias l='ls -l'
-alias ll='ls -laa'
+alias ll='ls -la'
 
-alias grep='rg'
-alias egrep='rg'
-alias fgrep='rg'
+# ls aliases =============================================================== }}}
+
+# grep aliases ============================================================= {{{
+
+# NOTE: do NOT alias grep to rg. rg's flags are not grep's -- notably `-r` is
+# --replace, not --recursive, so a reflex `grep -rln foo` silently rewrites the
+# printed matches instead of erroring. That invented a symbol that never existed
+# and cost a bogus checklist item on scampi#454. Use `rg` by name.
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
 alias xzegrep='xzegrep --color=auto'
 alias xzfgrep='xzfgrep --color=auto'
 alias xzgrep='xzgrep --color=auto'
@@ -25,22 +39,52 @@ alias zegrep='zegrep --color=auto'
 alias zfgrep='zfgrep --color=auto'
 alias zgrep='zgrep --color=auto'
 
+# grep aliases ============================================================= }}}
+
+# project aliases ============================================================= {{{
+
+alias scam='scampi'
+alias scm='scampi'
+
+# project aliases ============================================================= }}}
+
+# Type '-' to return to your previous dir.
+# '--' signifies the end of options.
+# Otherwise, '-=...' would be interpreted as a flag.
+alias -- -='cd -'
+
+if which z &>/dev/null; then
+  alias cd='z'
+fi
+
+alias mkdir='mkdir -p'
+
+alias ip='ip -c'
+
 alias vim='nvim'
 alias fvim='nvim "$(fzf)"'
 alias vimdiff='nvim -d'
 
-alias cat='bat --theme=gruvbox-dark'
-alias fm='yazi'
-
-alias cz='chezmoi'
-alias jj='just'
-alias lg='lazygit'
-alias mux='tmuxinator'
+if which bat &>/dev/null; then
+  alias cat='bat --theme=gruvbox-dark'
+fi
 
 alias df='df -h'
 alias du='du -h'
 
 alias hexdump='hexdump -C'
-alias diff='diff --color'
 
-# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
+alias md='glow'
+alias fm='yazi'
+alias jj='just'
+alias lg='lazygit'
+
+alias cz='chezmoi'
+alias mux='tmuxinator'
+
+alias k9s='k9s --logoless --splashless --refresh 0.75'
+
+alias 'cd..'='cd ..'
+alias 'cd~'='cd ~'
+
+alias please='sudo'

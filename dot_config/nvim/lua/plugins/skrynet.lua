@@ -34,6 +34,53 @@ return {
   },
 
   {
+    {
+      'neovim/nvim-lspconfig',
+      opts = {
+        servers = {
+          cue = {}, -- enable CUE LSP
+          starpls = {},
+          scampls = {
+            cmd = { vim.fn.expand '~/dev/scampi/scampi/scripts/scampls-dev.sh', '--log', '/tmp/scampls.log' },
+            filetypes = { 'scampi' },
+            root_dir = function(bufnr, cb)
+              local fname = vim.api.nvim_buf_get_name(bufnr)
+              -- If a scampls client is already running, reuse it.
+              -- Handles goto-def into stubs, deps, and sibling modules.
+              local clients = vim.lsp.get_clients { name = 'scampls' }
+              if #clients > 0 then
+                cb(clients[#clients].config.root_dir)
+                return
+              end
+              -- First file opened — find the project root.
+              local root = require('lspconfig.util').root_pattern 'scampi.mod'(fname)
+              cb(root or vim.fn.fnamemodify(fname, ':h'))
+            end,
+          },
+        },
+        setup = {
+          cue = function(_, _)
+            -- let LazyVim handle setup
+            return false
+          end,
+        },
+      },
+    },
+  },
+  {
+    {
+      'mason-org/mason.nvim',
+      opts = function(_, opts)
+        vim.list_extend(opts.ensure_installed, {
+          'cue',
+          'yamlfmt',
+          'starpls',
+        })
+      end,
+    },
+  },
+
+  {
     'nvim-lualine/lualine.nvim',
     opts = function(_, opts)
       opts.sections.lualine_z = opts.sections.lualine_y
@@ -51,31 +98,59 @@ return {
     end,
   },
 
+  -- {
+  --   'pskry/nvim-treesitter',
+  --   branch = 'add-scampi-parser',
+  --   opts = function(_, opts)
+  --     vim.filetype.add {
+  --       filename = {
+  --         ['.ansible-lint'] = 'yaml.ansible',
+  --         ['scampi.mod'] = 'scampi.mod',
+  --       },
+  --       extension = {
+  --         yamllint = 'yaml',
+  --         tfstate = 'json',
+  --         ['tfstate.backup'] = 'json',
+  --         star = 'starlark',
+  --         scampi = 'scampi',
+  --       },
+  --       pattern = {},
+  --     }
+  --
+  --     -- scampi-lang uses C-style comments: // line and /* */ nested block.
+  --     -- Sets commentstring for `gcc` / Comment.nvim on .scampi and scampi.mod buffers.
+  --     vim.api.nvim_create_autocmd('FileType', {
+  --       pattern = { 'scampi', 'scampi.mod' },
+  --       callback = function(args)
+  --         vim.bo[args.buf].commentstring = '// %s'
+  --       end,
+  --     })
+  --
+  --     vim.treesitter.language.register('python', 'starlark')
+  --
+  --     vim.list_extend(opts.ensure_installed, {
+  --       'yaml',
+  --       'jinja',
+  --       'cue',
+  --       'python',
+  --       'starlark',
+  --       'scampi',
+  --       'scampi_mod',
+  --     })
+  --     vim.list_extend(opts.highlight, {
+  --       enable = true,
+  --       disable = { 'just' },
+  --     })
+  --   end,
+  -- },
+
   {
     'nvim-treesitter/nvim-treesitter',
-    opts = function(_, opts)
-      vim.filetype.add {
-        filename = {
-          ['.ansible-lint'] = 'yaml.ansible',
-        },
-        extension = {
-          yamllint = 'yaml',
-          tfstate = 'json',
-          ['tfstate.backup'] = 'json',
-        },
-        pattern = {},
-      }
-
-      opts.highlight = {
-        enable = true,
-        disable = { 'just' },
-      }
-      opts.ensure_installed = {
-        'yaml',
-        'jinja2',
-      }
-    end,
+    dependencies = { 'neovim-treesitter/treesitter-parser-registry' },
+    lazy = false,
+    build = ':TSUpdate',
   },
+
   {
     'Glench/Vim-Jinja2-Syntax',
     ft = {
@@ -86,16 +161,24 @@ return {
     },
   },
 
-  -- {
-  --   'stevearc/conform.nvim',
-  --   ---@type conform.setupOpts
-  --   opts = {
-  --     formatters_by_ft = {
-  --       ['yaml.ansible'] = { 'ansible-lint' },
-  --     },
-  --   },
-  -- },
-  --
+  {
+    {
+      'stevearc/conform.nvim',
+      opts = function(_, opts)
+        opts.formatters_by_ft = opts.formatters_by_ft or {}
+        -- opts.formatters_by_ft.yaml = { 'yamlfmt' }
+        -- opts.formatters_by_ft.yml = { 'yamlfmt' }
+
+        opts.formatters = opts.formatters or {}
+        opts.formatters.cue_fmt = {
+          command = 'cue',
+          args = { 'fmt', '-' },
+          stdin = true,
+        }
+      end,
+    },
+  },
+
   {
     'nvim-neo-tree/neo-tree.nvim',
     dependencies = {
@@ -405,6 +488,13 @@ return {
         desc = 'Find Hidden (Root Dir)',
       },
     },
+    opts = {
+      pickers = {
+        find_files = {
+          filename_first = true,
+        },
+      },
+    },
   },
 
   {
@@ -603,6 +693,39 @@ return {
       add_default_keybindings = true, -- Add default keybindings
       copy_to_clipboard = false, -- Copy glyph to clipboard instead of inserting
       copy_register = '+', -- Register to use for copying (if `copy_to_clipboard` is true)
+    },
+  },
+
+  {
+    'nomnivore/ollama.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+
+    -- All the user commands added by the plugin
+    cmd = { 'Ollama', 'OllamaModel', 'OllamaServe', 'OllamaServeStop' },
+
+    keys = {
+      -- Sample keybind for prompt menu. Note that the <c-u> is important for selections to work properly.
+      {
+        '<leader>oo',
+        ":<c-u>lua require('ollama').prompt()<cr>",
+        desc = 'ollama prompt',
+        mode = { 'n', 'v' },
+      },
+
+      -- Sample keybind for direct prompting. Note that the <c-u> is important for selections to work properly.
+      {
+        '<leader>oG',
+        ":<c-u>lua require('ollama').prompt('Generate_Code')<cr>",
+        desc = 'ollama Generate Code',
+        mode = { 'n', 'v' },
+      },
+    },
+
+    ---@type Ollama.Config
+    opts = {
+      -- your configuration overrides
     },
   },
 

@@ -23,6 +23,8 @@ require('lazy').setup {
     { import = 'lazyvim.plugins.extras.dap.core' },
     { import = 'lazyvim.plugins.extras.util.chezmoi' },
 
+    { import = 'lazyvim.plugins.extras.ai.claudecode' },
+
     { import = 'lazyvim.plugins.extras.editor.refactoring' },
     { import = 'lazyvim.plugins.extras.editor.inc-rename' },
     { import = 'lazyvim.plugins.extras.editor.telescope' },
@@ -30,6 +32,7 @@ require('lazy').setup {
     { import = 'lazyvim.plugins.extras.lang.ansible' },
     { import = 'lazyvim.plugins.extras.lang.clangd' },
     { import = 'lazyvim.plugins.extras.lang.docker' },
+    { import = 'lazyvim.plugins.extras.lang.dotnet' },
     { import = 'lazyvim.plugins.extras.lang.git' },
     { import = 'lazyvim.plugins.extras.lang.go' },
     { import = 'lazyvim.plugins.extras.lang.json' },
@@ -37,6 +40,7 @@ require('lazy').setup {
     { import = 'lazyvim.plugins.extras.lang.python' },
     { import = 'lazyvim.plugins.extras.lang.terraform' },
     { import = 'lazyvim.plugins.extras.lang.yaml' },
+    { import = 'lazyvim.plugins.extras.lang.zig' },
 
     { import = 'lazyvim.plugins.extras.util.dot' },
 
@@ -58,7 +62,7 @@ require('lazy').setup {
         'gzip',
         -- "matchit",
         -- "matchparen",
-        -- "netrwPlugin",
+        'netrwPlugin',
         'tarPlugin',
         'tohtml',
         'tutor',

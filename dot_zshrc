@@ -2,6 +2,13 @@
 # ~/.zshrc
 #
 
+# zsh only sources .zshrc for interactive shells, so this is belt-and-braces for
+# a manual `source ~/.zshrc`. Must be `return`, not `exit` -- exit in a sourced
+# file kills the calling shell.
+if [[ ! -o interactive ]]; then
+    return 0
+fi
+
 () {
 
 # Zinit init =============================================================== {{{
@@ -140,7 +147,7 @@ function vdiff() {
     zstyle ':completion:*:*:make:*' tag-order 'targets'
 
     # Load Homebrew command completions
-    FPATH="/opt/homebrew/share/zsh/site-functions:${FPATH}"
+    FPATH="${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh/site-functions:${FPATH}"
 
 # Completion styling ======================================================= }}}
 
@@ -150,7 +157,7 @@ function vdiff() {
 
 # Aliases ================================================================== }}}
 
-    autoload -U compinit
+    autoload -Uz compinit
 
     compinit
 
@@ -165,6 +172,23 @@ function vdiff() {
     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] \
         && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+    # export ANTHROPIC_AUTH_TOKEN=dummy
+    # export ANTHROPIC_MODEL=claude-code-local
+    # ollama directly
+    # export ANTHROPIC_BASE_URL=http://localhost:11434
+    # anthropic shim
+    # export ANTHROPIC_BASE_URL=http://localhost:8000
+    #
+    # otherwise, remote-control doesnt work
+    # export DISABLE_TELEMETRY=1
+    # export DISABLE_ERROR_REPORTING=1
+    # export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+    # PATH itself is set in .profile (shims, so non-interactive shells get the
+    # pinned toolchain too). This upgrades interactive shells to mise's resolved
+    # install dirs, which skips the shim exec.
+    [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
+
 # SDKs ===================================================================== }}}
 
     # Display a random colorscript
@@ -173,6 +197,8 @@ function vdiff() {
 } "$@"
 
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/tofu tofu
+if (( $+commands[tofu] )); then
+    complete -o nospace -C "$commands[tofu]" tofu
+fi
 
 # vim:ts=4:sw=4:ft=zsh:fenc=utf-8:fdm=marker
