@@ -11,6 +11,18 @@ fi
 
 () {
 
+# mise =====================================================================
+#
+# FIRST, and that is the whole reason this block moved up here. mise activate puts
+# its completion directory on FPATH and swaps the shims for resolved install dirs;
+# running it after compinit means compinit already built its dump without any of it,
+# and every tool mise owns completes as a bare filename.
+#
+# PATH itself is set in .profile, with the shims, so non-interactive shells get the
+# pinned toolchain too. This only upgrades interactive shells past the shim exec.
+
+    [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
+
 # Zinit init ===============================================================
 
     ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -20,36 +32,21 @@ fi
     source "${ZINIT_HOME}/zinit.zsh"
 
 # Zinit plugins ============================================================
+#
+# ORDER IS LOAD-BEARING and it is not alphabetical or thematic. Plugins that wrap
+# ZLE widgets have to come after everything they are meant to wrap, and after
+# compinit, so they are deliberately loaded much further down this file:
+#
+#   compinit -> fzf-tab -> autosuggestions -> syntax-highlighting
+#
+# Only plugins that add completion functions or keymaps belong here.
 
-    # Starship prompt
-    zinit ice as"command" from"gh-r" \
-        atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-        atpull"%atclone" src"init.zsh"
-    zinit light starship/starship
-
-    # DOCS: https://github.com/zsh-users/zsh-syntax-highlighting
-    zinit light zsh-users/zsh-syntax-highlighting
     # DOCS: https://github.com/zsh-users/zsh-completions
     zinit light zsh-users/zsh-completions
-    # DOCS: https://github.com/zsh-users/zsh-autosuggestions
-    zinit light zsh-users/zsh-autosuggestions
 
     # DOCS: https://github.com/jeffreytse/zsh-vi-mode
     zinit ice depth=1
     zinit light jeffreytse/zsh-vi-mode
-
-    # Use fzf for reverse-history search (postponed)
-    # DOCS: https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#execute-extra-commands
-    zinit ice lucid wait
-    # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fzf
-    zinit snippet OMZP::fzf
-
-    zinit light Aloxaf/fzf-tab
-
-    # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git
-    zinit snippet OMZP::git
-    # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/command-not-found
-    zinit snippet OMZP::command-not-found
 
 # History ==================================================================
 
@@ -91,11 +88,18 @@ fi
     hash -d nvim=$XDG_CONFIG_HOME/nvim
 
 # Key bindings =============================================================
+#
+# Through zvm_after_init_commands, not with a bare bindkey. zsh-vi-mode rebuilds
+# both keymaps from scratch AFTER it initialises, so anything bound at file scope
+# is silently discarded. That is what happened to the old ^R binding, which looked
+# present for a year and never once took effect.
 
     export KEYTIMEOUT=1 # accept keys like <Esc> immediately
-    bindkey '^p' history-search-backward
-    bindkey '^n' history-search-forward
-    bindkey '^R' history-incremental-search-backward
+
+    zvm_after_init_commands+=(
+        'bindkey "^p" history-search-backward'
+        'bindkey "^n" history-search-forward'
+    )
 
 # Functions ================================================================
 
@@ -134,49 +138,45 @@ function vdiff() {
     zstyle ':completion:*:make:*:targets' call-command true
     zstyle ':completion:*:*:make:*' tag-order 'targets'
 
-    # Load Homebrew command completions
-    FPATH="${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh/site-functions:${FPATH}"
-
 # Aliases ==================================================================
 
     [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 
+# Completion ===============================================================
+#
+# Rebuild the dump only when it is older than a day. Plain `compinit` restats every
+# file on FPATH on every shell, which is the single biggest cost in this file.
 
     autoload -Uz compinit
-
-    compinit
-
-    # Initialize zoxide (must be run AFTER compinit)
-    eval "$(zoxide init zsh)"
+    if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+        compinit
+    else
+        compinit -C
+    fi
 
     zinit cdreplay -q
 
-# SDKs =====================================================================
+# Widget wrappers ==========================================================
+#
+# After compinit, and in this order. fzf-tab replaces the completion menu, so it
+# has to see completions that already exist; autosuggestions and syntax-highlighting
+# each wrap every widget defined before them, and syntax-highlighting's own docs
+# require it to be last.
 
-    export SDKMAN_DIR="$HOME/.sdkman"
-    [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] \
-        && source "$HOME/.sdkman/bin/sdkman-init.sh"
+    zinit light Aloxaf/fzf-tab
+    zinit light zsh-users/zsh-autosuggestions
+    zinit light zsh-users/zsh-syntax-highlighting
 
-    # export ANTHROPIC_AUTH_TOKEN=dummy
-    # export ANTHROPIC_MODEL=claude-code-local
-    # ollama directly
-    # export ANTHROPIC_BASE_URL=http://localhost:11434
-    # anthropic shim
-    # export ANTHROPIC_BASE_URL=http://localhost:8000
-    #
-    # otherwise, remote-control doesnt work
-    # export DISABLE_TELEMETRY=1
-    # export DISABLE_ERROR_REPORTING=1
-    # export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+# Shell integrations =======================================================
+#
+# All from mise-managed binaries rather than from plugins. starship used to be built
+# from a GitHub release by zinit, which meant two copies and two versions of the same
+# prompt; fzf used to come through OMZP::fzf, which hunts for the distro's integration
+# files and finds nothing when fzf is not from the distro.
 
-    # PATH itself is set in .profile (shims, so non-interactive shells get the
-    # pinned toolchain too). This upgrades interactive shells to mise's resolved
-    # install dirs, which skips the shim exec.
-    [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
-
-
-    # Display a random colorscript
-    # colorscript random
+    eval "$(zoxide init zsh)"
+    eval "$(starship init zsh)"
+    command -v fzf >/dev/null && eval "$(fzf --zsh)"
 
 } "$@"
 
