@@ -5,8 +5,15 @@ README.md
 # or an xkb option, which is a different file rather than a port of this one.
 .config/karabiner
 
-# Nothing reads it there. realmd owns /etc/krb5.conf and /etc/krb5.conf.d on a joined
-# machine, and .profile deliberately stops setting KRB5_CONFIG outside macOS, so this
-# would sit in a home directory looking authoritative while being ignored.
+# realmd owns /etc/krb5.conf and /etc/krb5.conf.d on a joined machine, and .profile
+# stops setting KRB5_CONFIG outside macOS, so this would be ignored where it sat.
+.krb5.conf
+{{- end }}
+
+{{- if not (has .chezmoi.hostname .personal_hosts) }}
+# Not a skrynet machine. Pointing ldapsearch at a home realm from somebody else's
+# hardware is useless to the person using it and writes the lab's topology onto a
+# device this repo does not control.
+.ldaprc
 .krb5.conf
 {{- end }}
