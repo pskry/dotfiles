@@ -7,6 +7,10 @@ if [[ ! -o interactive ]]; then
   return 0
 fi
 
+# A terminal starts a NON-login shell, which never reads .zprofile, so without this the
+# PATH set up there is missing and every `command -v` guard below answers wrong.
+[ -n "$__PROFILE_SOURCED" ] || . "$HOME/.profile"
+
 () {
 
 # mise =====================================================================

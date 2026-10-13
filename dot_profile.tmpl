@@ -128,6 +128,9 @@ else
 fi
 
 {{ end }}
+# Lets .zshrc and .bashrc tell whether a login shell already ran this.
+export __PROFILE_SOURCED=1
+
 # NOTE: uv's installer drops `. "$HOME/.local/share/../bin/env"` here. Delete it if it
 # comes back: the path normalizes to one prepend_path already covers, but its own guard
 # tests the unnormalized literal, so it appends a second differently-spelled copy.

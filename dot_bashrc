@@ -7,6 +7,11 @@ case $- in
   *) return 0 ;;
 esac
 
+# A terminal starts a NON-login shell, which never reads .bash_profile, so without this
+# the PATH set up there is missing and every `command -v` guard below answers wrong.
+# shellcheck source=/dev/null
+[ -n "$__PROFILE_SOURCED" ] || . "$HOME/.profile"
+
 # Before bash-completion below, which is when its completions have to exist.
 [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate bash)"
 
