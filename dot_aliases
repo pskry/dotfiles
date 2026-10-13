@@ -74,7 +74,15 @@ alias jj='just'
 alias lg='lazygit'
 
 alias cz='chezmoi'
-alias mux='tmuxp'
+
+# tmuxinator's verbs over tmuxp, which has `load` and no stop at all.
+mux() {
+  case "$1" in
+    start) shift; tmuxp load -y "${1:-.}" ;;
+    stop) shift; tmux kill-session -t "${1:-$(basename "$PWD")}" ;;
+    *) tmuxp "$@" ;;
+  esac
+}
 
 alias k9s='k9s --logoless --splashless --refresh 0.75'
 
