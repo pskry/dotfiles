@@ -4,7 +4,7 @@
 if command -v caffeinate >/dev/null 2>&1; then
   exec caffeinate -i "$@"
 elif command -v systemd-inhibit >/dev/null 2>&1; then
-  exec systemd-inhibit --what=idle --why="$1" -- "$@"
+  exec systemd-inhibit --what=idle -- "$@"
 fi
 
 exec "$@"
