@@ -126,8 +126,6 @@ function vdiff() {
 
 # Shell integrations =======================================================
 
-  # --cmd cd, not an alias: .aliases is sourced before this, so `alias cd=z` referred
-  # to a function that did not exist yet and silently did nothing.
   eval "$(zoxide init zsh --cmd cd)"
   eval "$(starship init zsh)"
   command -v fzf >/dev/null && eval "$(fzf --zsh)"

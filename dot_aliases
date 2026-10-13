@@ -5,8 +5,6 @@
 
 # ls aliases ===============================================================
 
-# No alias without eza: GNU and BSD ls disagree on both --color and
-# --group-directories-first, and a half-ported flag set is worse than the system's own.
 if command -v eza >/dev/null 2>&1; then
   alias ls='eza --group --group-directories-first --icons --color=auto'
 fi
@@ -43,7 +41,6 @@ alias gb='git branch'
 alias glo='git log --oneline --decorate --graph'
 alias gl='git pull'
 alias gp='git push'
-# --force-with-lease, never --force: it refuses when the remote moved under you.
 alias gpf='git push --force-with-lease'
 
 # project aliases =============================================================
