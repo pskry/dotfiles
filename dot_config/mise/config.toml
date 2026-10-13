@@ -1,0 +1,61 @@
+# The CLI toolchain, identical on every machine.
+#
+# EXACT versions, not "latest", for the same reason nvim's plugins are pinned in
+# lazy-lock.json: a version that moves on its own moves on one machine first, and then the
+# two stop being the same machine. `mise up --bump` rewrites this file, which is the
+# explicit upgrade, and the commit is the record of it.
+#
+# What is NOT here, and why:
+#
+#   shells            zsh, bash. A login shell has to exist before any of this runs.
+#   GNU userland      coreutils, gnu-sed, findutils. A macOS-only backfill; Fedora is
+#                     already GNU, and shadowing the system versions there breaks scripts
+#                     that expect the distro's.
+#   system toolchain  make, cmake, curl, clang. Deep enough into the OS that two copies
+#                     cause more trouble than version skew does.
+#   daemons and GUI   docker, ollama, kitty. Not tools on a PATH.
+#   languages         go, rust, java, node. Deliberately per project, in that project's
+#                     mise.toml, which is what the hierarchy is for.
+#   cluster clients   kubectl, helm, opentofu, argocd. These are pinned to something
+#                     OUTSIDE this machine: kubectl tolerates one minor of skew against the
+#                     API server, and tofu state is forward-only once written. skrynet's own
+#                     .mise.toml pins them against the cluster it talks to, which is the
+#                     only place that knows the right answer. A global pin would apply only
+#                     where there is no cluster to match.
+[tools]
+act = "0.2.89"
+age = "1.3.2"
+bat = "0.26.1"
+# git-delta. The registry name is `delta`.
+delta = "0.20.1"
+eza = "0.23.5"
+fd = "10.5.0"
+fzf = "0.74.5"
+gh = "2.102.0"
+glow = "3.0.0"
+hyperfine = "2.0.0"
+jq = "1.8.2"
+just = "1.58.0"
+k9s = "0.51.0"
+lazygit = "0.66.1"
+neovim = "0.12.6"
+ripgrep = "15.2.0"
+shellcheck = "0.11.0"
+shfmt = "3.14.1"
+sops = "3.13.3"
+starship = "1.26.0"
+# From mise rather than the package manager so the config in this repo is never read by a
+# different major version than the one it was written for.
+tmux = "3.7c"
+# What starts the tmux session per project, so not optional on a machine you work from.
+#
+# tmuxp rather than tmuxinator, which is a ruby gem nobody packages and would mean carrying
+# a whole ruby for one script. `tmuxp import tmuxinator` converts the existing
+# .tmuxinator.yml files rather than rewriting them.
+"pipx:tmuxp" = "1.74.0"
+usql = "0.21.6"
+# Backs the pipx: backend above. Same reason skrynet's own .mise.toml pins it.
+uv = "0.12.13"
+yazi = "26.9.1"
+yq = "4.54.1"
+zoxide = "0.10.0"

@@ -1,1 +1,12 @@
 README.md
+
+{{- if ne .chezmoi.os "darwin" }}
+# Karabiner remaps keys through a macOS kernel extension. The Linux equivalent is keyd
+# or an xkb option, which is a different file rather than a port of this one.
+.config/karabiner
+
+# Nothing reads it there. realmd owns /etc/krb5.conf and /etc/krb5.conf.d on a joined
+# machine, and .profile deliberately stops setting KRB5_CONFIG outside macOS, so this
+# would sit in a home directory looking authoritative while being ignored.
+.krb5.conf
+{{- end }}
