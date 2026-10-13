@@ -5,13 +5,10 @@
 
 # ls aliases ===============================================================
 
+# No alias without eza: GNU and BSD ls disagree on both --color and
+# --group-directories-first, and a half-ported flag set is worse than the system's own.
 if command -v eza >/dev/null 2>&1; then
-  alias ls='eza -g --group-directories-first --icons --color=auto'
-elif [ "$(uname -s)" = "Linux" ]; then
-  alias ls='ls --group-directories-first --color=auto'
-else
-  # BSD ls has no --group-directories-first.
-  alias ls='ls --color=auto'
+  alias ls='eza --group --group-directories-first --icons --color=auto'
 fi
 
 alias l='ls -l'
