@@ -42,6 +42,17 @@ prepend_path() {
     export PATH
 }
 
+# Force $1 to the FRONT, stripping any existing occurrence first. prepend_path
+# no-ops when the entry is already present, which leaves it stuck at whatever
+# low precedence a parent process handed down. Needed for anything that must
+# win even in an inherited environment (nested shells, tmux, editors).
+prepend_path_force() {
+    [ -d "$1" ] || return 0
+    PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vxF "$1" | paste -sd: -)
+    PATH="$1${PATH:+:$PATH}"
+    export PATH
+}
+
 # For optional toolchains that must NOT shadow system tools.
 append_path() {
     [ -d "$1" ] || return 0
@@ -65,7 +76,7 @@ prepend_path "$HOME/.local/bin"
 # mise shims first, so non-interactive shells get the pinned toolchain and not
 # whatever brew shellenv put on PATH above. Interactive shells later swap these
 # for mise's resolved install dirs via `mise activate` in .zshrc.
-prepend_path "$HOME/.local/share/mise/shims"
+prepend_path_force "$HOME/.local/share/mise/shims"
 
 # To use the bundled libunwind please use the following LDFLAGS:
 #   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
@@ -73,6 +84,7 @@ prepend_path "$HOME/.local/share/mise/shims"
 #   LDFLAGS="-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
 
 unset -f prepend_path
+unset -f prepend_path_force
 unset -f append_path
 
 # PATH setup =============================================================== }}}
