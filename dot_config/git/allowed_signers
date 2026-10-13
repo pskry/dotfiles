@@ -1,0 +1,3 @@
+# Every machine's key, so a signature made on one verifies on all of them.
+peter@skrypalle.dk ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEO0ipI1dJgcipUuOKaBrxL/DjG5+JDiYB7I+Hzv8TXW pskry@solaire
+peter@skrypalle.dk ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPwSRCsbYFKEFFerjLCU0Vyy7ifJp47sgxCVeqDieYzo pskry@havel
