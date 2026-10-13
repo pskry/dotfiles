@@ -27,9 +27,6 @@ export GOPATH="$HOME/go"
 export DOTNET_ROOT="$HOMEBREW_PREFIX/opt/dotnet/libexec"
 {{ end }}
 # POSIX only -- .profile is sourced by sh too, so no [[ ]] here.
-# Both dedupe and skip missing dirs.
-
-# For paths that SHOULD win over system tools.
 prepend_path() {
   [ -d "$1" ] || return 0
   case ":$PATH:" in
@@ -39,10 +36,8 @@ prepend_path() {
   export PATH
 }
 
-# Force $1 to the FRONT, stripping any existing occurrence first. prepend_path
-# no-ops when the entry is already present, which leaves it stuck at whatever
-# low precedence a parent process handed down. Needed for anything that must
-# win even in an inherited environment (nested shells, tmux, editors).
+# prepend_path no-ops when the entry is already present, leaving it at whatever
+# precedence a parent process handed down. This strips it first.
 prepend_path_force() {
   [ -d "$1" ] || return 0
   PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vxF "$1" | paste -sd: -)
@@ -50,7 +45,7 @@ prepend_path_force() {
   export PATH
 }
 
-# For optional toolchains that must NOT shadow system tools.
+# For toolchains that must NOT shadow system tools.
 append_path() {
   [ -d "$1" ] || return 0
   case ":$PATH:" in
@@ -71,9 +66,8 @@ append_path "$HOMEBREW_PREFIX/opt/make/libexec/gnubin"
 prepend_path "$GOPATH/bin"
 prepend_path "$HOME/.local/bin"
 
-# mise shims first, so non-interactive shells get the pinned toolchain and not
-# whatever the package manager put on PATH above. Interactive shells later swap
-# these for mise's resolved install dirs via `mise activate` in .zshrc.
+# Shims, so NON-interactive shells get the pinned toolchain too. Interactive ones
+# swap these for the resolved install dirs via `mise activate`.
 prepend_path_force "$HOME/.local/share/mise/shims"
 
 {{ if eq .chezmoi.os "darwin" -}}
@@ -134,9 +128,8 @@ else
 fi
 
 {{ end }}
-# NOTE: uv's installer drops `. "$HOME/.local/share/../bin/env"` here. Removed:
-# that path normalizes to $HOME/.local/bin, which prepend_path already covers,
-# but its guard tests the unnormalized literal so it never matches and appends a
-# second, differently-spelled copy. If a uv reinstall puts it back, delete it.
+# NOTE: uv's installer drops `. "$HOME/.local/share/../bin/env"` here. Delete it if it
+# comes back: the path normalizes to one prepend_path already covers, but its own guard
+# tests the unnormalized literal, so it appends a second differently-spelled copy.
 
 # vim:ts=2:sw=2:ft=sh:fenc=utf-8

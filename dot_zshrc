@@ -2,9 +2,7 @@
 # ~/.zshrc
 #
 
-# zsh only sources .zshrc for interactive shells, so this is belt-and-braces for
-# a manual `source ~/.zshrc`. Must be `return`, not `exit` -- exit in a sourced
-# file kills the calling shell.
+# For a manual `source ~/.zshrc`. Must be `return`: `exit` kills the calling shell.
 if [[ ! -o interactive ]]; then
   return 0
 fi
@@ -37,40 +35,25 @@ fi
 
 # History ==================================================================
 
-  # Enable additional glob operators. (Globbing = pattern matching)
-  # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
   setopt EXTENDED_GLOB
 
-  # Tell zsh where to store history.
   HISTFILE=$XDG_DATA_HOME/zsh/history
-
-  # Just in case: If the parent directory doesn't exist, create it.
   [[ -d $HISTFILE:h ]] || mkdir -p $HISTFILE:h
 
-  # Max number of entries to keep in history file.
   SAVEHIST=100000
-
-  # Max number of history entries to keep in memory.
   HISTSIZE="$(( 1.2 * SAVEHIST ))"
 
-  # Use modern file-locking mechanisms, for better safety & performance.
   setopt HIST_FCNTL_LOCK
-
-  # Keep only the most recent copy of each duplicate entry in history.
   setopt HIST_IGNORE_ALL_DUPS
   setopt HIST_SAVE_NO_DUPS
   setopt HIST_IGNORE_DUPS
   setopt HIST_FIND_NO_DUPS
-
-  # Auto-sync history between concurrent sessions.
   setopt SHARE_HISTORY
-
-  # Do not save commands starting with a space to history
   setopt HIST_IGNORE_SPACE
 
 # Directories ==============================================================
 
-  # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
+  # Makes ~dev and ~nvim expand to these.
   hash -d dev=$HOME/dev
   hash -d nvim=$XDG_CONFIG_HOME/nvim
 
@@ -104,22 +87,16 @@ function vdiff() {
 
 # Completion styling =======================================================
 
-  # Disable case sensitive completion matching
   zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-  # Set list-colors to enable filename colorizing
   zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-  # Set descriptions format to enable group support
-  # NOTE: don't use escape sequences here, fzf-tab will ignore them
+  # No escape sequences in the format: fzf-tab ignores them.
   zstyle ':completion:*:descriptions' format '[%d]'
-  # Force zsh not to show completion menu,
-  # which allows fzf-tab to capture the unambiguous prefix
+  # `menu no` is what lets fzf-tab capture the unambiguous prefix.
   zstyle ':completion:*' menu no
 
-  # Preview directory's content with eza when completing cd and zoxide
   zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
   zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
 
-  # Include make targets in completions
   zstyle ':completion:*:make:*:targets' call-command true
   zstyle ':completion:*:*:make:*' tag-order 'targets'
 
