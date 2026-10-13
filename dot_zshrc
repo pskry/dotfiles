@@ -6,162 +6,162 @@
 # a manual `source ~/.zshrc`. Must be `return`, not `exit` -- exit in a sourced
 # file kills the calling shell.
 if [[ ! -o interactive ]]; then
-    return 0
+  return 0
 fi
 
 () {
 
 # mise =====================================================================
 
-    # First: it puts its completions on FPATH, and compinit below only sees what is
-    # there when it runs. PATH itself comes from .profile.
-    [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
+  # First: it puts its completions on FPATH, and compinit below only sees what is
+  # there when it runs. PATH itself comes from .profile.
+  [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
 
 # Zinit init ===============================================================
 
-    ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-    [ ! -d "$ZINIT_HOME" ] && mkdir -p "$(dirname "$ZINIT_HOME")"
-    [ ! -d "$ZINIT_HOME/.git" ] \
-        && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-    source "${ZINIT_HOME}/zinit.zsh"
+  ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+  [ ! -d "$ZINIT_HOME" ] && mkdir -p "$(dirname "$ZINIT_HOME")"
+  [ ! -d "$ZINIT_HOME/.git" ] \
+    && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+  source "${ZINIT_HOME}/zinit.zsh"
 
 # Zinit plugins ============================================================
 #
 # Anything that wraps a ZLE widget is loaded further down instead, after compinit.
 # See the widget wrappers section.
 
-    # DOCS: https://github.com/zsh-users/zsh-completions
-    zinit light zsh-users/zsh-completions
+  # DOCS: https://github.com/zsh-users/zsh-completions
+  zinit light zsh-users/zsh-completions
 
-    # DOCS: https://github.com/jeffreytse/zsh-vi-mode
-    zinit ice depth=1
-    zinit light jeffreytse/zsh-vi-mode
+  # DOCS: https://github.com/jeffreytse/zsh-vi-mode
+  zinit ice depth=1
+  zinit light jeffreytse/zsh-vi-mode
 
 # History ==================================================================
 
-    # Enable additional glob operators. (Globbing = pattern matching)
-    # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
-    setopt EXTENDED_GLOB
+  # Enable additional glob operators. (Globbing = pattern matching)
+  # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
+  setopt EXTENDED_GLOB
 
-    # Tell zsh where to store history.
-    HISTFILE=$XDG_DATA_HOME/zsh/history
+  # Tell zsh where to store history.
+  HISTFILE=$XDG_DATA_HOME/zsh/history
 
-    # Just in case: If the parent directory doesn't exist, create it.
-    [[ -d $HISTFILE:h ]] || mkdir -p $HISTFILE:h
+  # Just in case: If the parent directory doesn't exist, create it.
+  [[ -d $HISTFILE:h ]] || mkdir -p $HISTFILE:h
 
-    # Max number of entries to keep in history file.
-    SAVEHIST=100000
+  # Max number of entries to keep in history file.
+  SAVEHIST=100000
 
-    # Max number of history entries to keep in memory.
-    HISTSIZE="$(( 1.2 * SAVEHIST ))"
+  # Max number of history entries to keep in memory.
+  HISTSIZE="$(( 1.2 * SAVEHIST ))"
 
-    # Use modern file-locking mechanisms, for better safety & performance.
-    setopt HIST_FCNTL_LOCK
+  # Use modern file-locking mechanisms, for better safety & performance.
+  setopt HIST_FCNTL_LOCK
 
-    # Keep only the most recent copy of each duplicate entry in history.
-    setopt HIST_IGNORE_ALL_DUPS
-    setopt HIST_SAVE_NO_DUPS
-    setopt HIST_IGNORE_DUPS
-    setopt HIST_FIND_NO_DUPS
+  # Keep only the most recent copy of each duplicate entry in history.
+  setopt HIST_IGNORE_ALL_DUPS
+  setopt HIST_SAVE_NO_DUPS
+  setopt HIST_IGNORE_DUPS
+  setopt HIST_FIND_NO_DUPS
 
-    # Auto-sync history between concurrent sessions.
-    setopt SHARE_HISTORY
+  # Auto-sync history between concurrent sessions.
+  setopt SHARE_HISTORY
 
-    # Do not save commands starting with a space to history
-    setopt HIST_IGNORE_SPACE
+  # Do not save commands starting with a space to history
+  setopt HIST_IGNORE_SPACE
 
 # Directories ==============================================================
 
-    # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
-    hash -d dev=$HOME/dev
-    hash -d nvim=$XDG_CONFIG_HOME/nvim
+  # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
+  hash -d dev=$HOME/dev
+  hash -d nvim=$XDG_CONFIG_HOME/nvim
 
 # Key bindings =============================================================
 
-    export KEYTIMEOUT=1 # accept keys like <Esc> immediately
+  export KEYTIMEOUT=1 # accept keys like <Esc> immediately
 
-    # zsh-vi-mode rebuilds both keymaps AFTER it initialises, so a bare bindkey here
-    # is silently discarded. That is what killed the old ^R binding.
+  # zsh-vi-mode rebuilds both keymaps AFTER it initialises, so a bare bindkey here
+  # is silently discarded. That is what killed the old ^R binding.
 
-    zvm_after_init_commands+=(
-        'bindkey "^p" history-search-backward'
-        'bindkey "^n" history-search-forward'
-    )
+  zvm_after_init_commands+=(
+    'bindkey "^p" history-search-backward'
+    'bindkey "^n" history-search-forward'
+  )
 
 # Functions ================================================================
 
 function vdiff() {
-    if [ $# -ne 2 ]; then
-        echo "usage: vdiff file1 file2"
-    else
-        diff \
-        --side-by-side \
-        --report-identical-files \
-        --width 80 \
-        --color=always \
-        --suppress-common-lines \
-        "$@"
-    fi
+  if [ $# -ne 2 ]; then
+    echo "usage: vdiff file1 file2"
+  else
+    diff \
+      --side-by-side \
+      --report-identical-files \
+      --width 80 \
+      --color=always \
+      --suppress-common-lines \
+      "$@"
+  fi
 }
 
 # Completion styling =======================================================
 
-    # Disable case sensitive completion matching
-    zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-    # Set list-colors to enable filename colorizing
-    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-    # Set descriptions format to enable group support
-    # NOTE: don't use escape sequences here, fzf-tab will ignore them
-    zstyle ':completion:*:descriptions' format '[%d]'
-    # Force zsh not to show completion menu,
-    # which allows fzf-tab to capture the unambiguous prefix
-    zstyle ':completion:*' menu no
+  # Disable case sensitive completion matching
+  zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+  # Set list-colors to enable filename colorizing
+  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+  # Set descriptions format to enable group support
+  # NOTE: don't use escape sequences here, fzf-tab will ignore them
+  zstyle ':completion:*:descriptions' format '[%d]'
+  # Force zsh not to show completion menu,
+  # which allows fzf-tab to capture the unambiguous prefix
+  zstyle ':completion:*' menu no
 
-    # Preview directory's content with eza when completing cd and zoxide
-    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
+  # Preview directory's content with eza when completing cd and zoxide
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+  zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
 
-    # Include make targets in completions
-    zstyle ':completion:*:make:*:targets' call-command true
-    zstyle ':completion:*:*:make:*' tag-order 'targets'
+  # Include make targets in completions
+  zstyle ':completion:*:make:*:targets' call-command true
+  zstyle ':completion:*:*:make:*' tag-order 'targets'
 
 # Aliases ==================================================================
 
-    [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
+  [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 
 # Completion ===============================================================
 
-    # Rebuild only when the dump is over a day old. Plain `compinit` restats every
-    # file on FPATH on every shell, and it is the biggest cost in this file.
-    autoload -Uz compinit
-    if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
-        compinit
-    else
-        compinit -C
-    fi
+  # Rebuild only when the dump is over a day old. Plain `compinit` restats every
+  # file on FPATH on every shell, and it is the biggest cost in this file.
+  autoload -Uz compinit
+  if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+  else
+    compinit -C
+  fi
 
-    zinit cdreplay -q
+  zinit cdreplay -q
 
 # Widget wrappers ==========================================================
 #
 # After compinit, and in THIS order: each wraps the widgets defined before it, and
 # syntax-highlighting must be last or it wraps nothing.
 
-    zinit light Aloxaf/fzf-tab
-    zinit light zsh-users/zsh-autosuggestions
-    zinit light zsh-users/zsh-syntax-highlighting
+  zinit light Aloxaf/fzf-tab
+  zinit light zsh-users/zsh-autosuggestions
+  zinit light zsh-users/zsh-syntax-highlighting
 
 # Shell integrations =======================================================
 
-    eval "$(zoxide init zsh)"
-    eval "$(starship init zsh)"
-    command -v fzf >/dev/null && eval "$(fzf --zsh)"
+  eval "$(zoxide init zsh)"
+  eval "$(starship init zsh)"
+  command -v fzf >/dev/null && eval "$(fzf --zsh)"
 
 } "$@"
 
 autoload -U +X bashcompinit && bashcompinit
 if (( $+commands[tofu] )); then
-    complete -o nospace -C "$commands[tofu]" tofu
+  complete -o nospace -C "$commands[tofu]" tofu
 fi
 
-# vim:ts=4:sw=4:ft=zsh:fenc=utf-8
+# vim:ts=2:sw=2:ft=zsh:fenc=utf-8

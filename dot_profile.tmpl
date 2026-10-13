@@ -16,7 +16,7 @@ export HOMEBREW_PREFIX='/opt/homebrew'
 # export HOMEBREW_NO_ENV_HINTS='true'
 
 if [ -f "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh" ]; then
-    source "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh"
+  source "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh"
 fi
 
 {{ end }}
@@ -31,12 +31,12 @@ export DOTNET_ROOT="$HOMEBREW_PREFIX/opt/dotnet/libexec"
 
 # For paths that SHOULD win over system tools.
 prepend_path() {
-    [ -d "$1" ] || return 0
-    case ":$PATH:" in
-        *":$1:"*) return 0 ;;
-    esac
-    PATH="$1${PATH:+:$PATH}"
-    export PATH
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in
+    *":$1:"*) return 0 ;;
+  esac
+  PATH="$1${PATH:+:$PATH}"
+  export PATH
 }
 
 # Force $1 to the FRONT, stripping any existing occurrence first. prepend_path
@@ -44,20 +44,20 @@ prepend_path() {
 # low precedence a parent process handed down. Needed for anything that must
 # win even in an inherited environment (nested shells, tmux, editors).
 prepend_path_force() {
-    [ -d "$1" ] || return 0
-    PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vxF "$1" | paste -sd: -)
-    PATH="$1${PATH:+:$PATH}"
-    export PATH
+  [ -d "$1" ] || return 0
+  PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vxF "$1" | paste -sd: -)
+  PATH="$1${PATH:+:$PATH}"
+  export PATH
 }
 
 # For optional toolchains that must NOT shadow system tools.
 append_path() {
-    [ -d "$1" ] || return 0
-    case ":$PATH:" in
-        *":$1:"*) return 0 ;;
-    esac
-    PATH="${PATH:+$PATH:}$1"
-    export PATH
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in
+    *":$1:"*) return 0 ;;
+  esac
+  PATH="${PATH:+$PATH:}$1"
+  export PATH
 }
 
 append_path "$HOME/.platformio/penv/bin"
@@ -99,12 +99,12 @@ export KRB5_CONFIG="$HOME/.krb5.conf"
 {{ end -}}
 
 if [ -f "$HOME/.secret/codeberg_token" ]; then
-    CODEBERG_TOKEN="$(cat "$HOME/.secret/codeberg_token")"
-    export CODEBERG_TOKEN
+  CODEBERG_TOKEN="$(cat "$HOME/.secret/codeberg_token")"
+  export CODEBERG_TOKEN
 fi
 if [ -f "$HOME/.secret/unifi_api_key" ]; then
-    UNIFI_API_KEY="$(cat "$HOME/.secret/unifi_api_key")"
-    export UNIFI_API_KEY
+  UNIFI_API_KEY="$(cat "$HOME/.secret/unifi_api_key")"
+  export UNIFI_API_KEY
 fi
 
 export SCAMPI_FUZZY_FINDER="fzf"
@@ -118,20 +118,20 @@ export SCAMPI_FUZZY_FINDER="fzf"
 SSH_ENV="$HOME/.ssh/agent-environment"
 
 start_agent() {
-    ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
-    chmod 600 "$SSH_ENV"
-    . "$SSH_ENV" >/dev/null
-    ssh-add >/dev/null
-    [ -f "$HOME/.ssh/hal9000_ed25519" ] && ssh-add "$HOME/.ssh/hal9000_ed25519"
+  ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
+  chmod 600 "$SSH_ENV"
+  . "$SSH_ENV" >/dev/null
+  ssh-add >/dev/null
+  [ -f "$HOME/.ssh/hal9000_ed25519" ] && ssh-add "$HOME/.ssh/hal9000_ed25519"
 }
 
 if [ -f "$SSH_ENV" ]; then
-    . "$SSH_ENV" >/dev/null
-    ps -ef | grep $SSH_AGENT_PID | grep ssh-agent$ >/dev/null || {
-        start_agent
-    }
-else
+  . "$SSH_ENV" >/dev/null
+  ps -ef | grep $SSH_AGENT_PID | grep ssh-agent$ >/dev/null || {
     start_agent
+  }
+else
+  start_agent
 fi
 
 {{ end }}
@@ -140,4 +140,4 @@ fi
 # but its guard tests the unnormalized literal so it never matches and appends a
 # second, differently-spelled copy. If a uv reinstall puts it back, delete it.
 
-# vim:ts=4:sw=4:ft=sh:fenc=utf-8
+# vim:ts=2:sw=2:ft=sh:fenc=utf-8
