@@ -1,0 +1,120 @@
+#
+# ~/.bashrc
+#
+# A bash that behaves enough like the zsh next door that muscle memory survives an
+# `ssh somewhere` or a `sudo -i`. Same aliases, same prompt, same history, same vi
+# keys.
+#
+# What bash does NOT get, and will not without ble.sh: inline autosuggestions,
+# syntax highlighting as you type, and fzf-tab's completion menu. That is the whole
+# gap, and it is not worth a 20k-line dependency on a shell used for twenty seconds
+# at a time.
+
+# Interactive only. Must be `return`, not `exit`.
+case $- in
+    *i*) ;;
+    *) return 0 ;;
+esac
+
+# mise =====================================================================
+# First, for the same reason as in .zshrc: it puts completions in place that
+# anything after it is expected to see.
+
+[ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate bash)"
+
+# Shell options ============================================================
+
+# Redraw after a window resize.
+shopt -s checkwinsize
+# ** matches across directories, as in zsh.
+shopt -s globstar
+# A bare directory name means cd to it.
+shopt -s autocd
+# Fix small typos in a cd target.
+shopt -s cdspell
+
+# History ==================================================================
+
+HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/bash/history"
+[ -d "${HISTFILE%/*}" ] || mkdir -p "${HISTFILE%/*}"
+
+HISTSIZE=120000
+HISTFILESIZE=100000
+
+# ignoredups plus ignorespace, matching HIST_IGNORE_DUPS and HIST_IGNORE_SPACE.
+# erasedups is the closest bash has to HIST_IGNORE_ALL_DUPS.
+HISTCONTROL=ignoreboth:erasedups
+HISTTIMEFORMAT='%F %T '
+
+# Append rather than truncate, which is what the last shell to exit would otherwise do.
+shopt -s histappend
+
+# The nearest thing to zsh's SHARE_HISTORY: flush this shell's new lines and read
+# everyone else's before each prompt. Not identical, since bash reconciles only at the
+# prompt, but it stops two terminals from overwriting each other.
+PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+# Key bindings =============================================================
+
+set -o vi
+
+# ^p / ^n search the history by what is already typed, as in .zshrc. In vi mode these
+# have to be bound in BOTH keymaps or they work only after Esc.
+bind -m vi-insert '"\C-p": history-search-backward'
+bind -m vi-insert '"\C-n": history-search-forward'
+bind -m vi-command '"\C-p": history-search-backward'
+bind -m vi-command '"\C-n": history-search-forward'
+
+# Case-insensitive completion, matching the zstyle matcher-list.
+bind 'set completion-ignore-case on'
+bind 'set show-all-if-ambiguous on'
+bind 'set colored-stats on'
+
+# Completion ===============================================================
+#
+# Probed rather than templated: Fedora ships this at /usr/share, Homebrew under its
+# own prefix, and both spellings are cheap to test.
+for _bc in \
+    "${HOMEBREW_PREFIX:-/opt/homebrew}/etc/profile.d/bash_completion.sh" \
+    /usr/share/bash-completion/bash_completion \
+    /etc/bash_completion
+do
+    if [ -r "$_bc" ]; then
+        # shellcheck source=/dev/null
+        . "$_bc"
+        break
+    fi
+done
+unset _bc
+
+if command -v tofu >/dev/null; then
+    complete -o nospace -C "$(command -v tofu)" tofu
+fi
+
+# Functions ================================================================
+
+vdiff() {
+    if [ $# -ne 2 ]; then
+        echo "usage: vdiff file1 file2"
+    else
+        diff \
+            --side-by-side \
+            --report-identical-files \
+            --width 80 \
+            --color=always \
+            --suppress-common-lines \
+            "$@"
+    fi
+}
+
+# Aliases ==================================================================
+
+[ -f "$HOME/.aliases" ] && . "$HOME/.aliases"
+
+# Shell integrations =======================================================
+
+command -v zoxide >/dev/null && eval "$(zoxide init bash)"
+command -v starship >/dev/null && eval "$(starship init bash)"
+command -v fzf >/dev/null && eval "$(fzf --bash)"
+
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8
