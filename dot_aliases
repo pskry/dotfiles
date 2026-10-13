@@ -38,10 +38,6 @@ alias zfgrep='zfgrep --color=auto'
 alias zgrep='zgrep --color=auto'
 
 # git aliases =================================================================
-#
-# Written out rather than taken from OMZP::git, which brought about 150 of them for
-# the dozen anyone uses, and only in zsh. These are plain sh, so bash gets them from
-# the same file.
 
 alias gst='git status'
 alias ga='git add'
@@ -53,11 +49,9 @@ alias gd='git diff'
 alias gds='git diff --staged'
 alias gb='git branch'
 alias glo='git log --oneline --decorate --graph'
-# Pull and push, spelled the way OMZ spelled them, because the muscle memory is real.
 alias gl='git pull'
 alias gp='git push'
-# --force-with-lease, never --force: it refuses when the remote moved under you,
-# which is the one case where forcing destroys somebody else's commit.
+# --force-with-lease, never --force: it refuses when the remote moved under you.
 alias gpf='git push --force-with-lease'
 
 # project aliases =============================================================

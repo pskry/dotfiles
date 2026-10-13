@@ -89,17 +89,12 @@ unset -f append_path
 
 export EDITOR="nvim"
 {{ if eq .chezmoi.os "darwin" -}}
-# llvm and openjdk from brew, so these paths exist only here. Exported globally on
-# Linux they would point at nothing and break every configure, cgo and pip wheel.
 export LDFLAGS="-L$HOMEBREW_PREFIX/opt/llvm/lib"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include -I$HOMEBREW_PREFIX/opt/llvm/include"
 
-# macOS ships Heimdal kinit and a 2011-era OpenLDAP, and mixing implementations
-# means an MIT ldapsearch cannot see a ticket Apple's kinit just cached. This file
-# pins one implementation end to end.
-#
-# NOT set on Linux: there realmd owns /etc/krb5.conf and /etc/krb5.conf.d, and
-# replacing it loses the ccache sssd actually reads.
+# Pins one Kerberos implementation end to end: an MIT ldapsearch cannot see a ticket
+# Apple's Heimdal kinit cached. Not on Linux, where realmd owns /etc/krb5.conf and
+# replacing it loses the ccache sssd reads.
 export KRB5_CONFIG="$HOME/.krb5.conf"
 {{ end -}}
 
@@ -117,10 +112,8 @@ export SCAMPI_FUZZY_FINDER="fzf"
 {{ if eq .chezmoi.os "darwin" -}}
 # SSH Agent ================================================================
 #
-# macOS only. A Linux desktop session already starts an agent and exports
-# SSH_AUTH_SOCK, so doing this there gives you two agents that disagree: GUI apps
-# talk to one, shells to the other, and `ssh-add -l` answers differently depending
-# on where you ask.
+# macOS only: a Linux desktop session already exports SSH_AUTH_SOCK, and a second
+# agent means GUI apps and shells disagree about which one holds your keys.
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 

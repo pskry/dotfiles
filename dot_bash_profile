@@ -1,12 +1,9 @@
 #
 # ~/.bash_profile
 #
-# Read by LOGIN shells only, and bash does not read .bashrc for those. So this file
-# exists almost entirely to make sure both halves run: the environment from .profile
-# and the interactive setup from .bashrc.
+# Bash does NOT read .bashrc for login shells, which is the usual reason a login
+# shell has no aliases while a terminal tab has all of them.
 #
-# The asymmetry is worth remembering, because it is the usual reason a login shell
-# has no aliases while a terminal tab has all of them.
 
 # shellcheck source=/dev/null
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
