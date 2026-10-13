@@ -11,7 +11,7 @@ fi
 
 () {
 
-# Zinit init =============================================================== {{{
+# Zinit init ===============================================================
 
     ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
     [ ! -d "$ZINIT_HOME" ] && mkdir -p "$(dirname "$ZINIT_HOME")"
@@ -19,9 +19,7 @@ fi
         && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
     source "${ZINIT_HOME}/zinit.zsh"
 
-# Zinit init =============================================================== }}}
-
-# Zinit plugins ============================================================ {{{
+# Zinit plugins ============================================================
 
     # Starship prompt
     zinit ice as"command" from"gh-r" \
@@ -53,9 +51,7 @@ fi
     # DOCS: https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/command-not-found
     zinit snippet OMZP::command-not-found
 
-# Zinit plugins ============================================================ }}}
-
-# History ================================================================== {{{
+# History ==================================================================
 
     # Enable additional glob operators. (Globbing = pattern matching)
     # https://zsh.sourceforge.io/Doc/Release/Expansion.html#Filename-Generation
@@ -88,26 +84,20 @@ fi
     # Do not save commands starting with a space to history
     setopt HIST_IGNORE_SPACE
 
-# History ================================================================== }}}
-
-# Directories ============================================================== {{{
+# Directories ==============================================================
 
     # `hash -d <name>=<path>` makes ~<name> a shortcut for <path>.
     hash -d dev=$HOME/dev
     hash -d nvim=$XDG_CONFIG_HOME/nvim
 
-# Directories ============================================================== }}}
-
-# Key bindings ============================================================= {{{
+# Key bindings =============================================================
 
     export KEYTIMEOUT=1 # accept keys like <Esc> immediately
     bindkey '^p' history-search-backward
     bindkey '^n' history-search-forward
     bindkey '^R' history-incremental-search-backward
 
-# Key bindings ============================================================= }}}
-
-# Functions ================================================================ {{{
+# Functions ================================================================
 
 function vdiff() {
     if [ $# -ne 2 ]; then
@@ -123,9 +113,7 @@ function vdiff() {
     fi
 }
 
-# Functions ================================================================ }}}
-
-# Completion styling ======================================================= {{{
+# Completion styling =======================================================
 
     # Disable case sensitive completion matching
     zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -149,13 +137,10 @@ function vdiff() {
     # Load Homebrew command completions
     FPATH="${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh/site-functions:${FPATH}"
 
-# Completion styling ======================================================= }}}
-
-# Aliases ================================================================== {{{
+# Aliases ==================================================================
 
     [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 
-# Aliases ================================================================== }}}
 
     autoload -Uz compinit
 
@@ -166,7 +151,7 @@ function vdiff() {
 
     zinit cdreplay -q
 
-# SDKs ===================================================================== {{{
+# SDKs =====================================================================
 
     export SDKMAN_DIR="$HOME/.sdkman"
     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] \
@@ -189,7 +174,6 @@ function vdiff() {
     # install dirs, which skips the shim exec.
     [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
 
-# SDKs ===================================================================== }}}
 
     # Display a random colorscript
     # colorscript random
@@ -201,4 +185,4 @@ if (( $+commands[tofu] )); then
     complete -o nospace -C "$commands[tofu]" tofu
 fi
 
-# vim:ts=4:sw=4:ft=zsh:fenc=utf-8:fdm=marker
+# vim:ts=4:sw=4:ft=zsh:fenc=utf-8

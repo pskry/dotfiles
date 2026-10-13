@@ -1,9 +1,9 @@
 #
 # ~/.aliases
 #
-# vim:ft=sh:fenc=utf-8:fdm=marker
+# vim:ft=sh:fenc=utf-8
 
-# ls aliases =============================================================== {{{
+# ls aliases ===============================================================
 
 if which eza &>/dev/null; then
   alias ls='eza -g --group-directories-first --icons --color=auto'
@@ -20,9 +20,7 @@ fi
 alias l='ls -l'
 alias ll='ls -la'
 
-# ls aliases =============================================================== }}}
-
-# grep aliases ============================================================= {{{
+# grep aliases =============================================================
 
 # NOTE: do NOT alias grep to rg. rg's flags are not grep's -- notably `-r` is
 # --replace, not --recursive, so a reflex `grep -rln foo` silently rewrites the
@@ -39,14 +37,10 @@ alias zegrep='zegrep --color=auto'
 alias zfgrep='zfgrep --color=auto'
 alias zgrep='zgrep --color=auto'
 
-# grep aliases ============================================================= }}}
-
-# project aliases ============================================================= {{{
+# project aliases =============================================================
 
 alias scam='scampi'
 alias scm='scampi'
-
-# project aliases ============================================================= }}}
 
 # Type '-' to return to your previous dir.
 # '--' signifies the end of options.
@@ -80,7 +74,7 @@ alias jj='just'
 alias lg='lazygit'
 
 alias cz='chezmoi'
-alias mux='tmuxinator'
+alias mux='tmuxp'
 
 alias k9s='k9s --logoless --splashless --refresh 0.75'
 

@@ -2,18 +2,14 @@
 # ~/.profile
 #
 
-# XDG standard ============================================================= {{ "{{{" }}
-
+# XDG standard =============================================================
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
 
-# XDG standard ============================================================= }}}
-
 {{ if eq .chezmoi.os "darwin" -}}
-# Homebrew ================================================================= {{ "{{{" }}
-
+# Homebrew =================================================================
 # unset HOMEBREW_SHELLENV_PREFIX
 export HOMEBREW_PREFIX='/opt/homebrew'
 [ -d "$HOMEBREW_PREFIX" ] && eval "$("$HOMEBREW_PREFIX/bin/brew" shellenv)"
@@ -23,10 +19,8 @@ if [ -f "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh" ]; then
     source "$HOMEBREW_PREFIX/Library/Homebrew/command-not-found/handler.sh"
 fi
 
-# Homebrew ================================================================= }}}
-
-{{ end -}}
-# PATH setup =============================================================== {{ "{{{" }}
+{{ end }}
+# PATH setup ===============================================================
 
 export GOPATH="$HOME/go"
 {{ if eq .chezmoi.os "darwin" -}}
@@ -93,8 +87,6 @@ unset -f prepend_path
 unset -f prepend_path_force
 unset -f append_path
 
-# PATH setup =============================================================== }}}
-
 export EDITOR="nvim"
 {{ if eq .chezmoi.os "darwin" -}}
 # llvm and openjdk from brew, so these paths exist only here. Exported globally on
@@ -123,7 +115,7 @@ fi
 export SCAMPI_FUZZY_FINDER="fzf"
 
 {{ if eq .chezmoi.os "darwin" -}}
-# SSH Agent ================================================================ {{ "{{{" }}
+# SSH Agent ================================================================
 #
 # macOS only. A Linux desktop session already starts an agent and exports
 # SSH_AUTH_SOCK, so doing this there gives you two agents that disagree: GUI apps
@@ -149,12 +141,10 @@ else
     start_agent
 fi
 
-# SSH Agent ================================================================ }}}
-
-{{ end -}}
+{{ end }}
 # NOTE: uv's installer drops `. "$HOME/.local/share/../bin/env"` here. Removed:
 # that path normalizes to $HOME/.local/bin, which prepend_path already covers,
 # but its guard tests the unnormalized literal so it never matches and appends a
 # second, differently-spelled copy. If a uv reinstall puts it back, delete it.
 
-# vim:ts=4:sw=4:ft=sh:fenc=utf-8:fdm=marker
+# vim:ts=4:sw=4:ft=sh:fenc=utf-8

@@ -1,0 +1,29 @@
+#
+# ~/.config/kitty/kitty.conf
+#
+# Only what is actually set. The 2500 lines of commented defaults this replaced came from
+# kitty's shipped sample, which pins one version's documentation into a config file and
+# then quietly disagrees with the version you are running. `kitty +runpy "from kitty.config
+# import *; print_defaults()"` prints the current ones when you need them.
+
+include ./theme.conf
+
+font_family      JetBrainsMono Nerd Font
+font_size        13.0
+
+cursor_shape          block
+cursor_blink_interval 0
+
+mouse_hide_wait -1
+
+enable_audio_bell no
+
+tab_bar_style powerline
+{{ if eq .chezmoi.os "darwin" }}
+# Parsed and ignored off macOS, so guarded rather than left to be puzzled over later.
+macos_titlebar_color  system
+# Left Option becomes Alt, Right Option keeps composing accented characters.
+macos_option_as_alt   left
+{{- end }}
+
+# vim:ft=kitty:fenc=utf-8
