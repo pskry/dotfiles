@@ -1,8 +1,5 @@
-# Facts the templates read. Not secrets: everything here is already in the repo's
-# history or on the network.
-
-# Machines that belong to the skrynet lab. Anything not listed is somebody else's
-# hardware, and the directory config below is both useless and a topology leak there.
+# Machines that belong to the skrynet lab. Anything not listed gets none of the
+# directory config, see .chezmoiignore.
 personal_hosts = ["solaire", "havel", "vamos"]
 
 [directory]

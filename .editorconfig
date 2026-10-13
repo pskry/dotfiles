@@ -1,6 +1,3 @@
-# Governs editing the SOURCE files, which is what `chezmoi edit` opens. chezmoi never
-# deploys entries beginning with a dot, so this stays in the repo.
-
 root = true
 
 [*]
@@ -14,9 +11,6 @@ indent_size = 2
 [*.{md,markdown}]
 # Two trailing spaces are a hard line break in markdown.
 trim_trailing_whitespace = false
-
-[*.json]
-indent_size = 2
 
 [Makefile]
 indent_style = tab
