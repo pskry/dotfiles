@@ -130,9 +130,10 @@ function vdiff() {
 
 # Shell integrations =======================================================
 
-  eval "$(zoxide init zsh --cmd cd)"
   eval "$(starship init zsh)"
   command -v fzf >/dev/null && eval "$(fzf --zsh)"
+  # Last, or its doctor warns: it has to see every other chpwd hook already installed.
+  eval "$(zoxide init zsh --cmd cd)"
 
 } "$@"
 

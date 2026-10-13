@@ -78,8 +78,9 @@ vdiff() {
 
 [ -f "$HOME/.aliases" ] && . "$HOME/.aliases"
 
-command -v zoxide >/dev/null && eval "$(zoxide init bash --cmd cd)"
 command -v starship >/dev/null && eval "$(starship init bash)"
 command -v fzf >/dev/null && eval "$(fzf --bash)"
+# Last, or its doctor warns: it has to see every other PROMPT_COMMAND hook installed.
+command -v zoxide >/dev/null && eval "$(zoxide init bash --cmd cd)"
 
 # vim:ts=2:sw=2:ft=sh:fenc=utf-8
