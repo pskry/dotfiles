@@ -92,9 +92,8 @@ export EDITOR="nvim"
 export LDFLAGS="-L$HOMEBREW_PREFIX/opt/llvm/lib"
 export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openjdk/include -I$HOMEBREW_PREFIX/opt/llvm/include"
 
-# Pins one Kerberos implementation end to end: an MIT ldapsearch cannot see a ticket
-# Apple's Heimdal kinit cached. Not on Linux, where realmd owns /etc/krb5.conf and
-# replacing it loses the ccache sssd reads.
+# An MIT ldapsearch cannot see a ticket Apple's Heimdal kinit cached, so pin one
+# implementation. Not on Linux, where it would shadow what realmd wrote.
 export KRB5_CONFIG="$HOME/.krb5.conf"
 {{ end -}}
 
@@ -112,8 +111,8 @@ export SCAMPI_FUZZY_FINDER="fzf"
 {{ if eq .chezmoi.os "darwin" -}}
 # SSH Agent ================================================================
 #
-# macOS only: a Linux desktop session already exports SSH_AUTH_SOCK, and a second
-# agent means GUI apps and shells disagree about which one holds your keys.
+# macOS only: a Linux session already exports SSH_AUTH_SOCK, and a second agent means
+# GUI apps and shells disagree about which one holds your keys.
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 

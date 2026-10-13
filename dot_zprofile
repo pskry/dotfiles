@@ -1,9 +1,6 @@
 #
 # ~/.zprofile
 #
-# Login shells only. .zshrc is read by zsh itself for interactive shells, so unlike
-# .bash_profile this does not have to source it.
-#
 
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 

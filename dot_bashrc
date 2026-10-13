@@ -7,7 +7,7 @@ case $- in
   *) return 0 ;;
 esac
 
-# First: it puts completions in place that everything below expects to see.
+# Before bash-completion below, which is when its completions have to exist.
 [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate bash)"
 
 shopt -s checkwinsize
@@ -24,8 +24,7 @@ HISTCONTROL=ignoreboth:erasedups
 HISTTIMEFORMAT='%F %T '
 shopt -s histappend
 
-# The nearest bash has to SHARE_HISTORY. Without it the last shell to exit
-# overwrites what every other one wrote.
+# The nearest bash has to SHARE_HISTORY.
 PROMPT_COMMAND="history -a; history -n${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
 set -o vi

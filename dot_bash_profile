@@ -1,8 +1,7 @@
 #
 # ~/.bash_profile
 #
-# Bash does NOT read .bashrc for login shells, which is the usual reason a login
-# shell has no aliases while a terminal tab has all of them.
+# Bash does not read .bashrc for login shells, which is why it is sourced here.
 #
 
 # shellcheck source=/dev/null

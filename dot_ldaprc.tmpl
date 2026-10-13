@@ -1,6 +1,5 @@
-# ldap://, not ldaps://, and that is not a downgrade: GSSAPI inside TLS fails against
-# Samba with "data 35b", while plain LDAP with GSSAPI negotiates SSF 256 and the DC
-# refuses cleartext outright.
+# ldap://, not ldaps://: GSSAPI inside TLS fails against Samba with "data 35b", and the
+# DC refuses cleartext anyway.
 URI ldap://{{ .directory.domain }}
 BASE {{ .directory.base_dn }}
 SASL_MECH GSSAPI

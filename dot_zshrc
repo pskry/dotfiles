@@ -13,8 +13,7 @@ fi
 
 # mise =====================================================================
 
-  # First: it puts its completions on FPATH, and compinit below only sees what is
-  # there when it runs. PATH itself comes from .profile.
+  # Before compinit: that is when its completions have to be on FPATH.
   [ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
 
 # Zinit init ===============================================================
@@ -27,8 +26,7 @@ fi
 
 # Zinit plugins ============================================================
 #
-# Anything that wraps a ZLE widget is loaded further down instead, after compinit.
-# See the widget wrappers section.
+# Widget wrappers go further down, after compinit.
 
   # DOCS: https://github.com/zsh-users/zsh-completions
   zinit light zsh-users/zsh-completions
@@ -80,8 +78,8 @@ fi
 
   export KEYTIMEOUT=1 # accept keys like <Esc> immediately
 
-  # zsh-vi-mode rebuilds both keymaps AFTER it initialises, so a bare bindkey here
-  # is silently discarded. That is what killed the old ^R binding.
+  # zsh-vi-mode rebuilds both keymaps after it initialises, so a bare bindkey here is
+  # silently discarded.
 
   zvm_after_init_commands+=(
     'bindkey "^p" history-search-backward'
@@ -131,8 +129,7 @@ function vdiff() {
 
 # Completion ===============================================================
 
-  # Rebuild only when the dump is over a day old. Plain `compinit` restats every
-  # file on FPATH on every shell, and it is the biggest cost in this file.
+  # -C skips restatting every file on FPATH, which is the biggest cost in this file.
   autoload -Uz compinit
   if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
     compinit
@@ -144,8 +141,7 @@ function vdiff() {
 
 # Widget wrappers ==========================================================
 #
-# After compinit, and in THIS order: each wraps the widgets defined before it, and
-# syntax-highlighting must be last or it wraps nothing.
+# Each wraps the widgets defined before it, so syntax-highlighting must be last.
 
   zinit light Aloxaf/fzf-tab
   zinit light zsh-users/zsh-autosuggestions

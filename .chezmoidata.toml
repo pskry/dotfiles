@@ -1,5 +1,3 @@
-# Machines that belong to the skrynet lab. Anything not listed gets none of the
-# directory config, see .chezmoiignore.
 personal_hosts = ["solaire", "havel", "vamos"]
 
 [directory]
