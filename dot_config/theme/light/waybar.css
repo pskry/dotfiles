@@ -1,0 +1,11 @@
+@define-color bg #fbf1c7;
+@define-color fg #3c3836;
+@define-color muted #7c6f64;
+@define-color dim #928374;
+@define-color accent #b57614;
+@define-color on-accent #fbf1c7;
+@define-color urgent #9d0006;
+@define-color on-urgent #fbf1c7;
+@define-color mode #076678;
+@define-color warning #b57614;
+@define-color critical #9d0006;

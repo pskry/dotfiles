@@ -1,0 +1,7 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# theme-follow owns ~/.config/theme/current from the first login on; this only makes sure
+# sway's include has something to read before it runs.
+set -euo pipefail
+[[ -e "$HOME/.config/theme/current" ]] || ln -s dark "$HOME/.config/theme/current"
+{{ end -}}

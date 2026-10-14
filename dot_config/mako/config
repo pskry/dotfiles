@@ -1,10 +1,4 @@
 font=JetBrainsMono Nerd Font 10
-background-color=#282828
-text-color=#ebdbb2
-border-color=#d79921
 border-size=2
 default-timeout=5000
-
-[urgency=high]
-border-color=#cc241d
-default-timeout=0
+include=~/.config/theme/current/mako.conf

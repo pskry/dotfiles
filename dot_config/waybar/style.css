@@ -1,3 +1,5 @@
+@import url("../theme/current/waybar.css");
+
 * {
   font-family: "JetBrainsMono Nerd Font";
   font-size: 12px;
@@ -7,33 +9,33 @@
 }
 
 window#waybar {
-  background: #282828;
-  color: #ebdbb2;
+  background: @bg;
+  color: @fg;
 }
 
 #workspaces button {
   padding: 0 8px;
-  color: #a89984;
+  color: @muted;
   background: transparent;
 }
 
 #workspaces button.focused {
-  color: #282828;
-  background: #d79921;
+  color: @on-accent;
+  background: @accent;
 }
 
 #workspaces button.urgent {
-  color: #ebdbb2;
-  background: #cc241d;
+  color: @on-urgent;
+  background: @urgent;
 }
 
 #mode {
   padding: 0 8px;
-  background: #458588;
+  background: @mode;
 }
 
 #window {
-  color: #a89984;
+  color: @muted;
 }
 
 #pulseaudio,
@@ -45,19 +47,19 @@ window#waybar {
 }
 
 #pulseaudio.muted {
-  color: #928374;
+  color: @dim;
 }
 
 #battery.warning {
-  color: #fabd2f;
+  color: @warning;
 }
 
 #battery.critical,
 #network.disconnected {
-  color: #fb4934;
+  color: @critical;
 }
 
 #clock {
-  color: #282828;
-  background: #a89984;
+  color: @bg;
+  background: @muted;
 }

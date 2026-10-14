@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Linux: watches the color-scheme setting and moves everything that cannot watch it itself
+# onto the matching palette in ~/.config/theme. Whatever changed the setting, a key, `theme`
+# or a settings app, this is what makes the rest follow.
+set -uo pipefail
+
+dir="$HOME/.config/theme"
+
+apply() {
+  local mode=dark
+  [[ "$(gsettings get org.gnome.desktop.interface color-scheme)" == "'prefer-light'" ]] && mode=light
+  [[ "$(readlink "$dir/current" 2>/dev/null)" == "$mode" && "${1:-}" != force ]] && return
+
+  ln -sfn "$mode" "$dir/current"
+  # GTK3 has no color-scheme of its own; GTK4 and the portal follow the setting directly.
+  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita$([[ $mode == dark ]] && echo -dark)"
+
+  swaymsg reload >/dev/null 2>&1
+  pkill -SIGUSR2 -x waybar
+  makoctl reload 2>/dev/null
+  # wob reads its colors once, at start.
+  pkill -x wob && swaymsg exec "$HOME/.local/bin/osd daemon" >/dev/null 2>&1
+}
+
+apply force
+gsettings monitor org.gnome.desktop.interface color-scheme | while read -r _; do apply; done

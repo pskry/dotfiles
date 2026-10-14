@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# theme              print dark or light
+# theme dark|light   set the OS appearance; everything else follows it
+# theme toggle
+set -euo pipefail
+
+current() {
+  if [[ "$(uname)" == Darwin ]]; then
+    defaults read -g AppleInterfaceStyle 2>/dev/null | grep -q Dark && echo dark || echo light
+  else
+    [[ "$(gsettings get org.gnome.desktop.interface color-scheme)" == "'prefer-dark'" ]] && echo dark || echo light
+  fi
+}
+
+set_mode() {
+  if [[ "$(uname)" == Darwin ]]; then
+    osascript -e "tell application \"System Events\" to tell appearance preferences to set dark mode to $([[ $1 == dark ]] && echo true || echo false)"
+  else
+    gsettings set org.gnome.desktop.interface color-scheme "prefer-$1"
+  fi
+}
+
+case "${1:-}" in
+  '') current ;;
+  dark | light) set_mode "$1" ;;
+  toggle) set_mode "$([[ "$(current)" == dark ]] && echo light || echo dark)" ;;
+  *) echo "usage: theme [dark|light|toggle]" >&2; exit 2 ;;
+esac

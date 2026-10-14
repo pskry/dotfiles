@@ -1,0 +1,11 @@
+[Unit]
+Description=Move sway, waybar, mako and wob onto the OS color scheme
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/bin/theme-follow
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target

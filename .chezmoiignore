@@ -17,7 +17,9 @@ README.md
 .config/mako
 .config/wob
 .config/swaylock
+.config/theme
 .local/bin/osd
+.local/bin/theme-follow
 {{- end }}
 
 {{- if not (has .chezmoi.hostname .personal_hosts) }}

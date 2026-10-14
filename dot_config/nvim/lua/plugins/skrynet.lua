@@ -741,6 +741,16 @@ return {
     },
   },
 
+  -- Follows the OS appearance on macOS and Linux; gruvbox reads `background`.
+  {
+    'f-person/auto-dark-mode.nvim',
+    lazy = false,
+    opts = {
+      set_dark_mode = function() vim.o.background = 'dark' end,
+      set_light_mode = function() vim.o.background = 'light' end,
+    },
+  },
+
   -- disable
   { 'folke/flash.nvim', enabled = false },
 }
