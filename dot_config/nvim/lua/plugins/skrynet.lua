@@ -80,9 +80,7 @@ return {
     },
   },
 
-  -- mason builds these with the language's own toolchain, which a project's .mise.toml
-  -- provides and no global install should. Outside such a project mason would fail on
-  -- every start, so it only tries where the toolchain is on PATH.
+  -- mason builds these with the project's own toolchain, and fails on every start without it.
   {
     'neovim/nvim-lspconfig',
     opts = function(_, opts)

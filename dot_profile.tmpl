@@ -22,10 +22,6 @@ fi
 {{ end }}
 # PATH setup ===============================================================
 
-# No GOPATH, DOTNET_ROOT or their tool dirs. Toolchains are per project, from its
-# .mise.toml, and a global bin dir would put tools built by whichever project ran last
-# on every PATH.
-
 # POSIX only -- .profile is sourced by sh too, so no [[ ]] here.
 prepend_path() {
   [ -d "$1" ] || return 0

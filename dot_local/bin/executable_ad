@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# godap against the realm of the Kerberos ticket in hand: domain, DC and base DN are all
-# derived, so the only thing typed is the password.
-
 set -euo pipefail
 
 principal="$(klist 2>/dev/null | sed -n 's/^Default principal: //p')"

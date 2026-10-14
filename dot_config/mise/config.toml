@@ -14,7 +14,6 @@ fd = "10.5.0"
 fzf = "0.74.5"
 gh = "2.102.0"
 glow = "3.0.0"
-# AD/LDAP browser TUI. `godap -k` binds with the Kerberos ticket already in hand.
 "github:Macmod/godap" = "2.12.2"
 hyperfine = "2.0.0"
 jq = "1.8.2"

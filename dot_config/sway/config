@@ -1,11 +1,10 @@
-# A user config REPLACES /etc/sway/config, so it is included first: the system one carries
-# the defaults and the machine's own config.d drop-ins, idle blanking among them.
+# A user config REPLACES /etc/sway/config, so include it, or the machine's config.d
+# drop-ins are lost with it.
 include /etc/sway/config
 
-# The thumb key sends Control, so Alt+C is copy wherever Ctrl+C is. Defined in ~/.config/xkb.
 input type:keyboard {
     xkb_options parity:lalt_ctrl
-    # macOS's fastest slider settings: InitialKeyRepeat 15 and KeyRepeat 2, in ms and Hz.
+    # macOS's fastest slider settings.
     repeat_delay 225
     repeat_rate 33
 }
@@ -16,8 +15,7 @@ input type:touchpad {
 }
 
 set $term kitty
-# --no-warn, or replacing the stock foot binding raises a swaynag "errors in your config".
+# Overriding a stock binding raises a swaynag "errors in your config" without --no-warn.
 bindsym --no-warn $mod+Return exec $term
 
-# The thumb key plus Space, the same movement as Cmd+Space on the Mac.
 bindsym Ctrl+space exec $menu
