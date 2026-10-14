@@ -7,6 +7,11 @@ README.md
 .krb5.conf
 {{- end }}
 
+{{- if eq .chezmoi.os "darwin" }}
+.config/sway
+.config/xkb
+{{- end }}
+
 {{- if not (has .chezmoi.hostname .personal_hosts) }}
 # Writes lab topology onto hardware this repo does not control.
 .ldaprc

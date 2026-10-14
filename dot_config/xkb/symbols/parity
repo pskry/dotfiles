@@ -1,0 +1,8 @@
+// The key left of space is Command on the Mac, and Linux applications take Command's
+// shortcuts on Control. Half of ctrl(swap_lalt_lctl): the outermost key already sends
+// Control by a BIOS swap, so swapping both would undo that.
+partial modifier_keys
+xkb_symbols "lalt_ctrl" {
+    replace key <LALT> { [ Control_L, Control_L ] };
+    modifier_map Control { <LALT> };
+};

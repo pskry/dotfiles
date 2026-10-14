@@ -1,0 +1,6 @@
+// libxkbcommon reads ~/.config/xkb before the system tree, so this file shadows the stock
+// rules. It includes them whole and adds one option.
+! include %S/evdev
+
+! option = symbols
+  parity:lalt_ctrl = +parity(lalt_ctrl)
