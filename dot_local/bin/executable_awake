@@ -4,7 +4,9 @@
 if command -v caffeinate >/dev/null 2>&1; then
   exec caffeinate -i "$@"
 elif command -v systemd-inhibit >/dev/null 2>&1; then
-  exec systemd-inhibit --what=idle -- "$@"
+  # sleep, not idle: caffeinate -i keeps the machine up and lets the screen blank and lock.
+  # An idle inhibitor would also hold off the lock for as long as the command runs.
+  exec systemd-inhibit --what=sleep --who=awake --why="$1" -- "$@"
 fi
 
 exec "$@"
