@@ -12,8 +12,6 @@ apply() {
   [[ "$(readlink "$dir/current" 2>/dev/null)" == "$mode" && "${1:-}" != force ]] && return
 
   ln -sfn "$mode" "$dir/current"
-  # GTK3 has no color-scheme of its own; GTK4 and the portal follow the setting directly.
-  gsettings set org.gnome.desktop.interface gtk-theme "Adwaita$([[ $mode == dark ]] && echo -dark)"
 
   # Also restarts waybar, as sway's bar. No SIGUSR2 on top: it lands on the fresh process
   # before its handler exists, and the default action is to terminate.
@@ -22,6 +20,10 @@ apply() {
   # wob reads its colors once, at start.
   pkill -x wob && swaymsg exec "$HOME/.local/bin/osd daemon" >/dev/null 2>&1
 }
+
+# Plain Adwaita, never Adwaita-dark: GTK takes the dark variant from color-scheme itself, and
+# Electron (Signal) treats the -dark NAME as light, so switching it made Signal lag a step.
+gsettings set org.gnome.desktop.interface gtk-theme Adwaita
 
 apply force
 gsettings monitor org.gnome.desktop.interface color-scheme | while read -r _; do apply; done
