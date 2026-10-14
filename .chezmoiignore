@@ -16,6 +16,7 @@ README.md
 .config/fuzzel
 .config/mako
 .config/wob
+.config/swaylock
 .local/bin/osd
 {{- end }}
 
