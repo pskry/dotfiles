@@ -10,6 +10,8 @@ README.md
 {{- if eq .chezmoi.os "darwin" }}
 .config/sway
 .config/xkb
+.config/systemd
+.config/environment.d
 {{- end }}
 
 {{- if not (has .chezmoi.hostname .personal_hosts) }}

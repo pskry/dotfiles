@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# godap against the realm of the Kerberos ticket in hand: domain, DC and base DN are all
+# derived, so the only thing typed is the password.
+
+set -euo pipefail
+
+principal="$(klist 2>/dev/null | sed -n 's/^Default principal: //p')"
+[[ -n "$principal" ]] || { echo "ad: no Kerberos ticket, kinit first" >&2; exit 1; }
+
+domain="$(tr '[:upper:]' '[:lower:]' <<<"${principal#*@}")"
+base="dc=${domain//./,dc=}"
+
+# godap reads only a FILE ccache, and Fedora keeps tickets in KCM where it cannot see them,
+# so it gets a ticket of its own that dies with this script.
+cc="$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/ad.XXXXXX")"
+trap 'rm -f "$cc"' EXIT
+kinit -c "FILE:$cc" "$principal"
+
+KRB5CCNAME="FILE:$cc" godap -d "$domain" -k -r "$base" "$@"
