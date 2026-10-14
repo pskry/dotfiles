@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Media keys for sway: change the level, then show it in wob.
+set -euo pipefail
+
+pipe="${XDG_RUNTIME_DIR:?}/wob.fifo"
+sink=@DEFAULT_AUDIO_SINK@
+source=@DEFAULT_AUDIO_SOURCE@
+
+level() { # "Volume: 0.55 [MUTED]" -> 0..100, muted as 0
+  local out
+  out="$(wpctl get-volume "$1")"
+  if [[ "$out" == *MUTED* ]]; then echo 0; else awk '{ printf "%d", $2 * 100 }' <<<"$out"; fi
+}
+
+case "${1:-}" in
+  daemon)
+    rm -f "$pipe"
+    mkfifo "$pipe"
+    tail -f "$pipe" | wob
+    exit
+    ;;
+  volume)
+    case "${2:-}" in
+      up) wpctl set-mute "$sink" 0; wpctl set-volume -l 1.0 "$sink" 5%+ ;;
+      down) wpctl set-volume "$sink" 5%- ;;
+      mute) wpctl set-mute "$sink" toggle ;;
+      *) exit 2 ;;
+    esac
+    value="$(level "$sink")"
+    ;;
+  mic)
+    wpctl set-mute "$source" toggle
+    value="$(level "$source")"
+    ;;
+  brightness)
+    case "${2:-}" in
+      up) brightnessctl -q set 5%+ ;;
+      down) brightnessctl -q set 5%- ;;
+      *) exit 2 ;;
+    esac
+    value=$(( $(brightnessctl get) * 100 / $(brightnessctl max) ))
+    ;;
+  *)
+    echo "usage: osd daemon | volume up|down|mute | mic | brightness up|down" >&2
+    exit 2
+    ;;
+esac
+
+# A FIFO write blocks until something reads it, which would hang the key if wob is not up.
+[[ -p "$pipe" ]] && timeout 0.5 tee "$pipe" <<<"$value" >/dev/null || true

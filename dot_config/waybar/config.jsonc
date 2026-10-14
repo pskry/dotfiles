@@ -1,0 +1,38 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 26,
+  "modules-left": ["sway/workspaces", "sway/mode"],
+  "modules-center": ["sway/window"],
+  "modules-right": ["pulseaudio", "network", "battery", "clock", "tray"],
+
+  "sway/window": { "max-length": 60 },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 muted",
+    "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+    "on-click": "~/.local/bin/osd volume mute"
+  },
+
+  "network": {
+    "format-wifi": "󰖩 {essid}",
+    "format-ethernet": "󰈀 {ipaddr}",
+    "format-disconnected": "󰖪 offline",
+    "tooltip-format": "{ifname} {ipaddr}"
+  },
+
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"],
+    "states": { "warning": 25, "critical": 10 }
+  },
+
+  "clock": {
+    "format": "{:%a %d %b  %H:%M}",
+    "tooltip-format": "{:%Y-%m-%d}"
+  },
+
+  "tray": { "spacing": 8 }
+}

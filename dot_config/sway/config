@@ -15,7 +15,38 @@ input type:touchpad {
 }
 
 set $term kitty
+set $menu fuzzel
+set $osd ~/.local/bin/osd
+
 # Overriding a stock binding raises a swaynag "errors in your config" without --no-warn.
 bindsym --no-warn $mod+Return exec $term
-
+bindsym --no-warn $mod+d exec $menu
 bindsym Ctrl+space exec $menu
+
+# The stock bindings use pactl, which raises the volume past 100% without limit.
+bindsym --locked --no-warn XF86AudioRaiseVolume exec $osd volume up
+bindsym --locked --no-warn XF86AudioLowerVolume exec $osd volume down
+bindsym --locked --no-warn XF86AudioMute exec $osd volume mute
+bindsym --locked --no-warn XF86AudioMicMute exec $osd mic
+bindsym --locked --no-warn XF86MonBrightnessUp exec $osd brightness up
+bindsym --locked --no-warn XF86MonBrightnessDown exec $osd brightness down
+exec $osd daemon
+
+assign [app_id="firefox"] workspace number 2
+assign [app_id="org.mozilla.firefox"] workspace number 2
+assign [class="Signal"] workspace number 3
+assign [app_id="signal"] workspace number 3
+
+bar bar-0 swaybar_command waybar
+
+font pango:JetBrainsMono Nerd Font 10
+default_border pixel 2
+default_floating_border pixel 2
+gaps inner 6
+output * bg #282828 solid_color
+
+# gruvbox dark          border  bg      text    indicator child_border
+client.focused          #d79921 #d79921 #282828 #fabd2f   #d79921
+client.focused_inactive #504945 #504945 #ebdbb2 #504945   #504945
+client.unfocused        #3c3836 #3c3836 #928374 #3c3836   #3c3836
+client.urgent           #cc241d #cc241d #ebdbb2 #cc241d   #cc241d

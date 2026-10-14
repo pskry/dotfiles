@@ -6,3 +6,10 @@
     type = "git-repo"
     url = "https://github.com/tmux-plugins/tpm.git"
     refreshPeriod = "168h"
+{{- if eq .chezmoi.os "linux" }}
+[".local/share/fonts/JetBrainsMonoNerd"]
+    type = "archive"
+    url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz"
+    exact = true
+    include = ["*.ttf"]
+{{- end }}

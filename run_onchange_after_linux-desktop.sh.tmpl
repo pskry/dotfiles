@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/usr/bin/env bash
+# Re-runs when this file changes, so bump the font version here with the external.
+# nerd-fonts v3.5.1
+set -euo pipefail
+
+fc-cache -f "$HOME/.local/share/fonts"
+
+# Per user, so it needs a remote of its own; the system flathub remote is not visible to --user.
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install --user --noninteractive flathub org.signal.Signal
+{{ end -}}

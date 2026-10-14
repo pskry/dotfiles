@@ -12,6 +12,11 @@ README.md
 .config/xkb
 .config/systemd
 .config/environment.d
+.config/waybar
+.config/fuzzel
+.config/mako
+.config/wob
+.local/bin/osd
 {{- end }}
 
 {{- if not (has .chezmoi.hostname .personal_hosts) }}
