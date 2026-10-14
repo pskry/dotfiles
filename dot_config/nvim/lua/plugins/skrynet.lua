@@ -80,6 +80,20 @@ return {
     },
   },
 
+  -- mason builds these with the language's own toolchain, which a project's .mise.toml
+  -- provides and no global install should. Outside such a project mason would fail on
+  -- every start, so it only tries where the toolchain is on PATH.
+  {
+    'neovim/nvim-lspconfig',
+    opts = function(_, opts)
+      for server, toolchain in pairs { gopls = 'go', fsautocomplete = 'dotnet' } do
+        if opts.servers[server] and vim.fn.executable(toolchain) == 0 then
+          opts.servers[server].mason = false
+        end
+      end
+    end,
+  },
+
   {
     'nvim-lualine/lualine.nvim',
     opts = function(_, opts)
