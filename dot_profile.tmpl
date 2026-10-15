@@ -108,8 +108,6 @@ start_agent() {
   ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
   chmod 600 "$SSH_ENV"
   . "$SSH_ENV" >/dev/null
-  ssh-add >/dev/null
-  [ -f "$HOME/.ssh/hal9000_ed25519" ] && ssh-add "$HOME/.ssh/hal9000_ed25519"
 }
 
 if [ -f "$SSH_ENV" ]; then
@@ -122,6 +120,15 @@ else
 fi
 
 {{ end }}
+# Exit 1 is a reachable agent with no keys; 2 is no agent at all.
+ssh-add -l >/dev/null 2>&1
+if [ $? -eq 1 ]; then
+  for k in "$HOME"/.ssh/*; do
+    [ -f "$k" ] && head -n1 "$k" 2>/dev/null | grep -q '^-----BEGIN .*PRIVATE KEY-----$' &&
+      ssh-add -q "$k" </dev/null
+  done
+fi
+
 # Lets .zshrc and .bashrc tell whether a login shell already ran this.
 export __PROFILE_SOURCED=1
 
