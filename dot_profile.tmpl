@@ -96,38 +96,8 @@ fi
 
 export SCAMPI_FUZZY_FINDER="fzf"
 
-{{ if eq .chezmoi.os "darwin" -}}
-# SSH Agent ================================================================
-#
-# macOS only: a Linux session already exports SSH_AUTH_SOCK, and a second agent means
-# GUI apps and shells disagree about which one holds your keys.
-
-SSH_ENV="$HOME/.ssh/agent-environment"
-
-start_agent() {
-  ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
-  chmod 600 "$SSH_ENV"
-  . "$SSH_ENV" >/dev/null
-}
-
-if [ -f "$SSH_ENV" ]; then
-  . "$SSH_ENV" >/dev/null
-  ps -ef | grep $SSH_AGENT_PID | grep ssh-agent$ >/dev/null || {
-    start_agent
-  }
-else
-  start_agent
-fi
-
-{{ end }}
-# Exit 1 is a reachable agent with no keys; 2 is no agent at all.
-ssh-add -l >/dev/null 2>&1
-if [ $? -eq 1 ]; then
-  for k in "$HOME"/.ssh/*; do
-    [ -f "$k" ] && head -n1 "$k" 2>/dev/null | grep -q '^-----BEGIN .*PRIVATE KEY-----$' &&
-      ssh-add -q "$k" </dev/null
-  done
-fi
+# The session's own agent (systemd socket, launchd on macOS), shared with GUI apps.
+"$HOME/.local/bin/ssh-add-all"
 
 # Lets .zshrc and .bashrc tell whether a login shell already ran this.
 export __PROFILE_SOURCED=1

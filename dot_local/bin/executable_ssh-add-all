@@ -1,0 +1,12 @@
+#!/bin/sh
+# Load every private key in ~/.ssh into the agent, if it is reachable and empty.
+
+# Exit 1 is a reachable agent with no keys; 2 is no agent at all.
+ssh-add -l >/dev/null 2>&1
+[ $? -eq 1 ] || exit 0
+
+for k in "$HOME"/.ssh/*; do
+  [ -f "$k" ] || continue
+  head -n1 "$k" 2>/dev/null | grep -q '^-----BEGIN .*PRIVATE KEY-----$' || continue
+  ssh-add -q "$k" </dev/null
+done
