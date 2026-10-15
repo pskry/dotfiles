@@ -6,10 +6,15 @@ set -euo pipefail
 
 fc-cache -f "$HOME/.local/share/fonts"
 
+{{ if has .chezmoi.hostname .personal_hosts -}}
+# Personal hosts only: a messenger of mine has no business installing itself on an
+# employer's laptop, whoever is logged in.
+#
 # Per user, so it needs a remote of its own; the system flathub remote is not visible to --user.
 flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --user --noninteractive flathub org.signal.Signal
 # Native Wayland. Under XWayland Electron draws its menu bar from GTK settings sway never
 # publishes, so it stays light whatever the theme.
 flatpak override --user --env=SIGNAL_USE_WAYLAND=1 org.signal.Signal
+{{ end -}}
 {{ end -}}
