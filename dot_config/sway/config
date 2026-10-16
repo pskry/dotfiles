@@ -3,7 +3,10 @@
 include /etc/sway/config
 
 input type:keyboard {
-    xkb_options parity:lalt_ctrl
+    # sway reads none of GNOME's input sources, so the layouts are declared here too.
+    # First one is primary; Super+Space cycles.
+    xkb_layout us,dk
+    xkb_options parity:lalt_ctrl,grp:win_space_toggle
     # macOS's fastest slider settings.
     repeat_delay 225
     repeat_rate 33
