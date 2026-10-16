@@ -9,20 +9,28 @@
 # started, a run_onchange script does its nothing once and is never reconsidered.
 set -Eeuo pipefail
 
-{{ if eq .chezmoi.os "darwin" -}}
-root="$HOME/Library/Application Support/Firefox"
-{{ else -}}
-root="$HOME/.mozilla/firefox"
-{{ end -}}
 prefs="${XDG_CONFIG_HOME:-$HOME/.config}/firefox/user.js"
-
 [[ -r $prefs ]] || exit 0
-[[ -r "$root/profiles.ini" ]] || exit 0
 
-# Path= is relative to the root unless IsRelative=0, which nothing this side writes.
-while read -r profile; do
-  dir="$root/$profile"
-  [[ -d $dir ]] || continue
-  cp -f "$prefs" "$dir/user.js"
-  echo "firefox prefs -> $profile"
-done < <(awk -F= '/^Path=/ { print $2 }' "$root/profiles.ini")
+# BOTH Linux locations, because Firefox moved. Recent builds keep profiles under
+# XDG_CONFIG_HOME; older ones use ~/.mozilla, and a machine upgraded in place can still
+# have the old one. Whichever has a profiles.ini is the live one.
+roots=(
+{{- if eq .chezmoi.os "darwin" }}
+  "$HOME/Library/Application Support/Firefox"
+{{- else }}
+  "${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox"
+  "$HOME/.mozilla/firefox"
+{{- end }}
+)
+
+for root in "${roots[@]}"; do
+  [[ -r "$root/profiles.ini" ]] || continue
+  # Path= is relative to the root unless IsRelative=0, which nothing this side writes.
+  while read -r profile; do
+    dir="$root/$profile"
+    [[ -d $dir ]] || continue
+    cp -f "$prefs" "$dir/user.js"
+    echo "firefox prefs -> $profile"
+  done < <(awk -F= '/^Path=/ { print $2 }' "$root/profiles.ini")
+done
