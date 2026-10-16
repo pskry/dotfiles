@@ -4,7 +4,9 @@
 # A profile directory is named with a random prefix that differs per machine, so chezmoi
 # cannot target it directly. This reads profiles.ini and copies the file into each one.
 #
-# prefs hash: {{ include "dot_config/firefox/user.js" | sha256sum }}
+# Runs on EVERY apply rather than on change, because what decides whether it can do
+# anything is whether a profile exists yet. On a machine where Firefox has never been
+# started, a run_onchange script does its nothing once and is never reconsidered.
 set -Eeuo pipefail
 
 {{ if eq .chezmoi.os "darwin" -}}
