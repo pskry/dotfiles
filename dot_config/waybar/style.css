@@ -38,6 +38,7 @@ window#waybar {
   color: @muted;
 }
 
+#language,
 #pulseaudio,
 #network,
 #battery,
