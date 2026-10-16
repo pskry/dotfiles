@@ -40,6 +40,10 @@ assign [app_id="firefox"] workspace number 2
 assign [app_id="org.mozilla.firefox"] workspace number 2
 assign [class="Signal"] workspace number 3
 assign [app_id="signal"] workspace number 3
+# Both spellings, as above: app_id is what a native wayland window reports, class is what
+# the same app reports through XWayland.
+assign [app_id="com.mattermost.Desktop"] workspace number 3
+assign [class="Mattermost"] workspace number 3
 
 bar bar-0 swaybar_command waybar
 
