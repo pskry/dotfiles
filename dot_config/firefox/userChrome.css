@@ -1,0 +1,72 @@
+/* Gruvbox for the browser chrome, following the desktop's light/dark setting.
+ *
+ * Installed into every profile by run_after_firefox-prefs, which also turns on
+ * toolkit.legacyUserProfileCustomizations.stylesheets. Without that pref Firefox
+ * ignores this file entirely and gives no indication that it did.
+ *
+ * UNSUPPORTED by construction: this styles Firefox's internal markup, which Mozilla
+ * changes without notice. Keep it to the few surfaces below, so a broken update costs a
+ * small repair rather than a rewrite.
+ *
+ * The media query works because the theme is set to follow the system
+ * (browser.theme.toolbar-theme = 2), so the chrome reports the desktop's scheme.
+ */
+
+:root {
+  /* gruvbox light */
+  --gb-bg: #fbf1c7;
+  --gb-bg-alt: #ebdbb2;
+  --gb-fg: #3c3836;
+  --gb-fg-dim: #665c54;
+  --gb-accent: #458588;
+  --gb-border: #d5c4a1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* gruvbox dark */
+    --gb-bg: #282828;
+    --gb-bg-alt: #3c3836;
+    --gb-fg: #ebdbb2;
+    --gb-fg-dim: #a89984;
+    --gb-accent: #83a598;
+    --gb-border: #504945;
+  }
+}
+
+/* Toolbars and the tab strip. */
+#navigator-toolbox,
+#nav-bar,
+#PersonalToolbar,
+#TabsToolbar {
+  background-color: var(--gb-bg) !important;
+  color: var(--gb-fg) !important;
+  border-color: var(--gb-border) !important;
+}
+
+/* The address bar, including its expanded state while typing. */
+#urlbar-background,
+#searchbar {
+  background-color: var(--gb-bg-alt) !important;
+  color: var(--gb-fg) !important;
+  border-color: var(--gb-border) !important;
+}
+
+#urlbar-input,
+#searchbar .searchbar-textbox {
+  color: var(--gb-fg) !important;
+}
+
+/* Tabs: the selected one carries the accent, the rest recede. */
+.tabbrowser-tab .tab-background[selected] {
+  background-color: var(--gb-bg-alt) !important;
+  border-bottom: 2px solid var(--gb-accent) !important;
+}
+
+.tabbrowser-tab:not([selected]) .tab-label {
+  color: var(--gb-fg-dim) !important;
+}
+
+.tabbrowser-tab[selected] .tab-label {
+  color: var(--gb-fg) !important;
+}

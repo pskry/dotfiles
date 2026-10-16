@@ -9,8 +9,13 @@ user_pref("browser.uidensity", 1);
 user_pref("browser.compactmode.show", true);
 
 // Follow the desktop rather than picking a side, so the theme-follow script drives it.
+// userChrome.css reads the same signal through prefers-color-scheme, so the gruvbox
+// palette switches with everything else.
 user_pref("browser.theme.toolbar-theme", 2);
 user_pref("browser.theme.content-theme", 2);
+
+// Without this Firefox ignores userChrome.css and says nothing about why.
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
 // The new tab page is a product surface by default. None of this is search or history.
 user_pref("browser.newtabpage.activity-stream.showSponsored", false);

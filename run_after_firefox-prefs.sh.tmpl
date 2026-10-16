@@ -10,6 +10,7 @@
 set -Eeuo pipefail
 
 prefs="${XDG_CONFIG_HOME:-$HOME/.config}/firefox/user.js"
+chrome_css="${XDG_CONFIG_HOME:-$HOME/.config}/firefox/userChrome.css"
 [[ -r $prefs ]] || exit 0
 
 # BOTH Linux locations, because Firefox moved. Recent builds keep profiles under
@@ -31,6 +32,10 @@ for root in "${roots[@]}"; do
     dir="$root/$profile"
     [[ -d $dir ]] || continue
     cp -f "$prefs" "$dir/user.js"
+    if [[ -r $chrome_css ]]; then
+      mkdir -p "$dir/chrome"
+      cp -f "$chrome_css" "$dir/chrome/userChrome.css"
+    fi
     echo "firefox prefs -> $profile"
   done < <(awk -F= '/^Path=/ { print $2 }' "$root/profiles.ini")
 done
