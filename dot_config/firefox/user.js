@@ -17,6 +17,10 @@ user_pref("browser.theme.content-theme", 2);
 // Without this Firefox ignores userChrome.css and says nothing about why.
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
+// The Mozilla VPN upsell, which is where the toolbar button comes from.
+user_pref("browser.vpn_promo.enabled", false);
+user_pref("browser.privatebrowsing.vpnpromourl", "");
+
 // The new tab page is a product surface by default. None of this is search or history.
 user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);

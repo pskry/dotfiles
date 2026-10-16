@@ -1,5 +1,15 @@
 personal_hosts = ["solaire", "havel", "vamos"]
 
+# Terminal font size per machine, because it is a function of the panel rather than of
+# taste: the same number that is right on a retina display is enormous on 1920 and absurd
+# on 1080p. A host with no entry gets the default.
+[kitty]
+font_size_default = 13.0
+
+[kitty.font_size]
+havel = 11.0
+lt08786 = 10.5
+
 [directory]
 realm = "AD.SKRYNET.DK"
 domain = "ad.skrynet.dk"

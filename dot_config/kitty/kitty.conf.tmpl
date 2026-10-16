@@ -7,7 +7,8 @@
 # as the OS appearance changes. A theme included here would win over them.
 
 font_family      JetBrainsMono Nerd Font
-font_size        13.0
+# Per machine, from .chezmoidata.toml: the panel decides this, not preference.
+font_size        {{ if hasKey .kitty.font_size .chezmoi.hostname }}{{ index .kitty.font_size .chezmoi.hostname }}{{ else }}{{ .kitty.font_size_default }}{{ end }}
 
 cursor_shape          block
 cursor_blink_interval 0
