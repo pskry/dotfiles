@@ -25,6 +25,10 @@ neovim = "0.12.6"
 # yamlls, dockerls, bashls, pyright, ansiblels and jsonls all fail and nvim looks broken
 # on a fresh machine. It worked on the mac only because brew had already put node there.
 node = "26.12.0"
+# `npm install -g` into a mise-managed node puts the package inside that node's install
+# directory, so it silently disappears the next time node is bumped. The npm backend
+# pins it like everything else here instead.
+"npm:opencode-ai" = "1.19.0"
 ripgrep = "15.2.0"
 # blink.cmp's fuzzy matcher is Rust. Without it the plugin falls back to a Lua matcher
 # that works and is slower, which shows up as a failed build.
