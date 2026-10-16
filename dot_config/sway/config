@@ -36,6 +36,10 @@ bindsym --locked --no-warn XF86MonBrightnessUp exec $osd brightness up
 bindsym --locked --no-warn XF86MonBrightnessDown exec $osd brightness down
 exec $osd daemon
 
+# sway runs nothing from /etc/xdg/autostart, so the tray client is started here. Guarded
+# rather than host-gated: it starts where it is installed and is silent everywhere else.
+exec command -v snx-rs-gui >/dev/null && snx-rs-gui
+
 assign [app_id="firefox"] workspace number 2
 assign [app_id="org.mozilla.firefox"] workspace number 2
 assign [class="Signal"] workspace number 3
