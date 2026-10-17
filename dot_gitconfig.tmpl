@@ -3,13 +3,15 @@
      laptop carries their address, one from mine carries mine.
 
      THIS REPO IS PUBLIC, so the work identity is not in it. A machine that is not in
-     personal_hosts gets no [user] block here and includes a file written by hand on that
-     machine instead. Missing identity makes git refuse to commit with a message naming
-     the file, which is the right failure: noisy, local, and impossible to mistake for
-     having worked.
+     personal_hosts gets no [user] block here; it includes identity.local at the BOTTOM
+     of this file instead, seeded on that machine from the account itself.
+
+     At the bottom on purpose. Includes are expanded in place and the last value wins, so
+     a file included here can override anything above it, which is what lets a machine
+     with no signing key turn commit.gpgsign off. Included at the top it could not.
 
      Keyed off personal_hosts, so an unknown machine is treated as work. That is the safe
-     direction to fail: no identity is an error you fix in a minute, the wrong one is a
+     direction to fail: no identity is an error git names in one line, the wrong one is a
      personal address in an employer's history.
 */ -}}
 {{- if has .chezmoi.hostname .personal_hosts }}
@@ -17,9 +19,6 @@
 	name = pskry
 	email = peter@skrypalle.dk
 	signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub
-{{- else }}
-[include]
-	path = {{ .chezmoi.homeDir }}/.config/git/identity.local
 {{- end }}
 [init]
 	defaultBranch = main
@@ -48,3 +47,10 @@
 	syntax-theme = gruvbox-dark
 [diff]
 	colorMoved = default
+{{- if not (has .chezmoi.hostname .personal_hosts) }}
+
+# Seeded by the workstation role from the account itself, never from this repo. Carries
+# the [user] block, and turns signing off where that account has no key.
+[include]
+	path = {{ .chezmoi.homeDir }}/.config/git/identity.local
+{{- end }}
