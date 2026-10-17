@@ -53,8 +53,9 @@ zoxide = "0.10.0"
 # maintain, and an unknown machine is treated as work rather than silently receiving the
 # personal set.
 {{ if not (has .chezmoi.hostname .personal_hosts) }}
-# `npm install -g` into a mise-managed node puts the package inside that node's install
-# directory, where it disappears the next time node is bumped. The npm backend pins it
-# like everything else here.
-"npm:opencode-ai" = "1.19.0"
+# ubi, NOT npm. The npm backend installs with --ignore-scripts, and opencode-ai's
+# postinstall is what puts its binary in place: it installs "successfully" and then every
+# invocation fails with "postinstall script was not run". ubi takes the release binary
+# from GitHub and has nothing to run.
+"ubi:sst/opencode" = "1.19.3"
 {{ end -}}
