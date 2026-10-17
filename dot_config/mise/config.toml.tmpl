@@ -53,8 +53,13 @@ zoxide = "0.10.0"
 # maintain, and an unknown machine is treated as work rather than silently receiving the
 # personal set.
 {{ if not (has .chezmoi.hostname .personal_hosts) }}
-# opencode is NOT here, deliberately. Both obvious routes are broken: the npm backend
-# installs with --ignore-scripts so its postinstall never runs and every invocation says
-# so, and ubi fetches an AppImage that wants libfuse.so.2. It also needs a private
-# endpoint and key, so it is set up by hand rather than pinned here.
+# `matching` is load-bearing. The release carries 37 assets and ubi picks the first that
+# looks like this platform, which is opencode-desktop-linux-x86_64.AppImage: the DESKTOP
+# app, not the CLI, and it needs libfuse.so.2 that nothing here has. The CLI is
+# opencode-linux-x64.tar.gz.
+#
+# Not the npm backend either, though npm is what terma's manual says: mise installs npm
+# packages with --ignore-scripts, and opencode-ai's postinstall is what puts the binary
+# in place. It installs "successfully" and then every invocation fails saying so.
+"ubi:sst/opencode" = { version = "1.19.3", matching = "opencode-linux-x64.tar.gz" }
 {{ end -}}
