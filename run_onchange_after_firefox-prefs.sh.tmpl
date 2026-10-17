@@ -4,9 +4,19 @@
 # A profile directory is named with a random prefix that differs per machine, so chezmoi
 # cannot target it directly. This reads profiles.ini and copies the file into each one.
 #
-# Runs on EVERY apply rather than on change, because what decides whether it can do
-# anything is whether a profile exists yet. On a machine where Firefox has never been
-# started, a run_onchange script does its nothing once and is never reconsidered.
+# The hash below is what decides when this re-runs, and it covers both things that
+# matter: the prefs themselves, and WHICH PROFILES EXIST. The second is the subtle one.
+# On a machine where Firefox has never been started there is no profile to write into, so
+# a plain run_onchange would do nothing once and never reconsider; naming the profile list
+# means the first launch changes the hash and this runs again.
+#
+# A plain `run_` script would also work and was tried, but it reports as pending in every
+# `chezmoi status` forever, which is a worse trade: a status that always shows something
+# is a status nobody reads.
+#
+# prefs:    {{ include "dot_config/firefox/user.js" | sha256sum }}
+# chrome:   {{ include "dot_config/firefox/userChrome.css" | sha256sum }}
+# profiles: {{ output "sh" "-c" "cat \"$HOME/.mozilla/firefox/profiles.ini\" \"$HOME/.config/mozilla/firefox/profiles.ini\" \"$HOME/Library/Application Support/Firefox/profiles.ini\" 2>/dev/null | grep '^Path=' || true" | sha256sum }}
 set -Eeuo pipefail
 
 prefs="${XDG_CONFIG_HOME:-$HOME/.config}/firefox/user.js"
