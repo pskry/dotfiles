@@ -93,6 +93,13 @@ if [ -f "$HOME/.secret/unifi_api_key" ]; then
   UNIFI_API_KEY="$(cat "$HOME/.secret/unifi_api_key")"
   export UNIFI_API_KEY
 fi
+# The key itself never appears here, only the path to it: this repo is public, and a
+# machine without the file just skips the block. Command substitution strips the trailing
+# newline, which is what the consumer wants.
+if [ -f "$HOME/.secret/gefion-api-key" ]; then
+  TERMA_API_KEY="$(cat "$HOME/.secret/gefion-api-key")"
+  export TERMA_API_KEY
+fi
 
 export SCAMPI_FUZZY_FINDER="fzf"
 
