@@ -6,21 +6,20 @@
     type = "git-repo"
     url = "https://github.com/tmux-plugins/tpm.git"
     refreshPeriod = "168h"
-{{- if eq .chezmoi.os "linux" }}
+{{- /*
+     The font every terminal config here names, so it is declared on EVERY machine. It
+     used to be linux-only, which left macOS working purely because the font had been
+     installed by hand once: a dependency nothing recorded and a rebuild would not have.
+
+     Only the destination differs. macOS reads ~/Library/Fonts and indexes it on its own;
+     Linux needs ~/.local/share/fonts and an fc-cache, which the desktop script runs.
+*/ -}}
+{{ if eq .chezmoi.os "darwin" }}
+["Library/Fonts/JetBrainsMonoNerd"]
+{{- else }}
 [".local/share/fonts/JetBrainsMonoNerd"]
+{{- end }}
     type = "archive"
     url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz"
     exact = true
-    # The four faces a terminal actually renders, not all 96 in the archive. chezmoi walks
-    # every included entry on `status` and `diff`, which is why those took 1.8s here and
-    # 0.03s on macOS, where this whole block is skipped.
-    #
-    # The weights left out are real fonts, just ones nothing is configured to ask for:
-    # kitty names the family and picks regular, bold and italic from it.
-    include = [
-      "JetBrainsMonoNerdFont-Regular.ttf",
-      "JetBrainsMonoNerdFont-Bold.ttf",
-      "JetBrainsMonoNerdFont-Italic.ttf",
-      "JetBrainsMonoNerdFont-BoldItalic.ttf",
-    ]
-{{- end }}
+    include = ["*.ttf"]

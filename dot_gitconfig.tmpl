@@ -1,7 +1,26 @@
+{{- /*
+     Identity follows the MACHINE, not the person: a commit authored on an employer's
+     laptop carries their address, one from mine carries mine.
+
+     THIS REPO IS PUBLIC, so the work identity is not in it. A machine that is not in
+     personal_hosts gets no [user] block here and includes a file written by hand on that
+     machine instead. Missing identity makes git refuse to commit with a message naming
+     the file, which is the right failure: noisy, local, and impossible to mistake for
+     having worked.
+
+     Keyed off personal_hosts, so an unknown machine is treated as work. That is the safe
+     direction to fail: no identity is an error you fix in a minute, the wrong one is a
+     personal address in an employer's history.
+*/ -}}
+{{- if has .chezmoi.hostname .personal_hosts }}
 [user]
 	name = pskry
 	email = peter@skrypalle.dk
 	signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub
+{{- else }}
+[include]
+	path = {{ .chezmoi.homeDir }}/.config/git/identity.local
+{{- end }}
 [init]
 	defaultBranch = main
 [alias]
