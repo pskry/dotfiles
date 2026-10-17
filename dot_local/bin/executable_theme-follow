@@ -19,6 +19,14 @@ apply() {
   makoctl reload 2>/dev/null
   # wob reads its colors once, at start.
   pkill -x wob && swaymsg exec "$HOME/.local/bin/osd daemon" >/dev/null 2>&1
+
+  # btop OWNS its config: it rewrites btop.conf on exit, so chezmoi cannot manage the file
+  # without fighting it. Only the one line is touched, and only when btop is not running,
+  # or the running instance would write its own value back over this on quit.
+  local conf="$HOME/.config/btop/btop.conf"
+  if [[ -f $conf ]] && ! pgrep -x btop >/dev/null; then
+    sed -i "s/^color_theme = .*/color_theme = \"gruvbox_$mode\"/" "$conf"
+  fi
 }
 
 # Plain Adwaita, never Adwaita-dark: GTK takes the dark variant from color-scheme itself, and

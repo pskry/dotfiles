@@ -11,5 +11,16 @@
     type = "archive"
     url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/JetBrainsMono.tar.xz"
     exact = true
-    include = ["*.ttf"]
+    # The four faces a terminal actually renders, not all 96 in the archive. chezmoi walks
+    # every included entry on `status` and `diff`, which is why those took 1.8s here and
+    # 0.03s on macOS, where this whole block is skipped.
+    #
+    # The weights left out are real fonts, just ones nothing is configured to ask for:
+    # kitty names the family and picks regular, bold and italic from it.
+    include = [
+      "JetBrainsMonoNerdFont-Regular.ttf",
+      "JetBrainsMonoNerdFont-Bold.ttf",
+      "JetBrainsMonoNerdFont-Italic.ttf",
+      "JetBrainsMonoNerdFont-BoldItalic.ttf",
+    ]
 {{- end }}
